@@ -1,0 +1,6 @@
+
+[Default Applications]
+inode/directory=terminal-ranger.desktop
+
+[Added Associations]
+inode/directory=terminal-ranger.desktop;

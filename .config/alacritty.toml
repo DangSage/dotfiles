@@ -1,0 +1,168 @@
+live_config_reload = true
+
+[colors.bright]
+black = "0x709080"
+blue = "0x94BFF3"
+cyan = "0x93E0E3"
+green = "0x72D5A3"
+magenta = "0xEC93D3"
+red = "0xDCA3A3"
+white = "0xFFFFFF"
+yellow = "0xF0DFAF"
+
+[colors.cursor]
+cursor = "#ffdd00"
+
+[colors.normal]
+black = "0x3f3f3f"
+blue = "0x9ab8d7"
+cyan = "0x8cd0d3"
+green = "0x60b48a"
+magenta = "0xdc8cc3"
+red = "0xD67979"
+white = "0xFFFFFF"
+yellow = "0xdfaf8f"
+
+[colors.primary]
+background = "0x303030"
+foreground = "0xdcdcdc"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+size = 6.0
+
+[font.normal]
+family = "CaskaydiaCoveNerdFontMono"
+style = "SemiLight"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "Paste"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "Copy"
+
+[[keyboard.bindings]]
+action = "ScrollPageUp"
+key = "PageUp"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollPageDown"
+key = "PageDown"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToTop"
+key = "Home"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "End"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollHalfPageUp"
+key = "Up"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollHalfPageDown"
+key = "Down"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToTop"
+key = "Left"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollToBottom"
+key = "Right"
+mode = "~Alt"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mode = "~Vi"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mode = "~Vi"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Alt"
+
+[[keyboard.bindings]]
+action = "PasteSelection"
+key = "Insert"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ResetFontSize"
+key = "Key0"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "Equals"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "Plus"
+mods = "Control|Shift"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "NumpadAdd"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "DecreaseFontSize"
+key = "Minus"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "DecreaseFontSize"
+key = "NumpadSubtract"
+mods = "Control"
+
+[[mouse.bindings]]
+action = "PasteSelection"
+mouse = "Middle"
+
+[scrolling]
+history = 100000
+
+[window]
+dynamic_title = true
+padding = { x = 4, y = 3 }
+dynamic_padding = true
+opacity = 1.0
+
+[window.dimensions]
+columns = 95
+lines = 28
