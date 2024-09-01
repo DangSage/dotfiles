@@ -9,7 +9,6 @@ brightnessctl
 btop
 cmake
 crypto++
-dfrs
 doxygen
 dunst
 efibootmgr
