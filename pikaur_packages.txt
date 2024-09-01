@@ -1,0 +1,13 @@
+cava
+elementary-xfce-icons
+librespot
+mpdris2
+pikaur
+spotify
+spotify-player
+teamviewer
+visual-studio-code-bin
+xorgxrdp
+xrandr-invert-colors
+xrdp
+zoom
