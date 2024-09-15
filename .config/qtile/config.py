@@ -31,7 +31,6 @@ gi.require_version('Notify', '0.7')
 from gi.repository import Notify, GLib
 
 from backlight_notify import notify_brightness
-from playerctl_widget import get_playerctl_metadata
 
 from libqtile import qtile, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
@@ -47,20 +46,6 @@ terminal = guess_terminal()
 def autostart():
     home = os.path.expanduser('~')
     subprocess.Popen([home + '/.config/qtile/autostart.sh'])
-
-# Function to update the widget
-def update_playerctl_widget():
-    widget = qtile.widgets_map.get("playerctl")
-    if widget:
-        widget.update(get_playerctl_metadata())
-
-# Subscribe to hooks to update the widget
-@hook.subscribe.client_new
-@hook.subscribe.client_killed
-@hook.subscribe.client_managed
-@hook.subscribe.client_urgent_hint_changed
-def refresh_playerctl_widget(*args, **kwargs):
-    update_playerctl_widget()
 
 
 keys = [
@@ -239,13 +224,6 @@ screens = [
                     update_interval=60,
                 ),
                 widget.Sep(foreground="#808080"),
-                widget.GenPollText(
-                    update_interval=1,
-                    func=lambda: get_playerctl_metadata(),
-                    name="playerctl",
-                    foreground="#dfaf8f",
-                    fmt="{}",
-                ),
                 widget.Spacer(),
                 widget.Systray(),
                 widget.Spacer(length=5),
@@ -261,9 +239,8 @@ screens = [
                 #widget.QuickExit(background='C56868',foreground='F0DFAF'),
             ],
             24,
-            background="#00000000",
             border_width=[0, 0, 0, 0],
-            #border_color=["000000", "000000", "000000", "000000"]  # Borders are magenta
+            background="#00000000",
         ),
         # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
         # By default we handle these events delayed to already improve performance, however your system might still be struggling
