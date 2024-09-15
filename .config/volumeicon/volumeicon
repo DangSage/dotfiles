@@ -8,8 +8,8 @@ notification_type=1
 
 [StatusIcon]
 stepsize=10
-onclick=alacritty -e 'alsamixer'
-theme=White Gnome
+onclick=myxer
+theme=Default
 use_panel_specific_icons=true
 reverse_scroll_direction=false
 lmb_slider=true
