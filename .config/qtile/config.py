@@ -27,16 +27,18 @@
 import gi
 import os
 import subprocess
+import datetime
+
 gi.require_version('Notify', '0.7')
 from gi.repository import Notify, GLib
-
 from backlight_notify import notify_brightness
 
 from libqtile import qtile, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
-from libqtile import widget, bar, layout  # Core Qtile components
+from libqtile import bar, layout  # Core Qtile components
+from qtile_extras import widget
 
 mod = "mod4"
 mod1 = "mod1"
@@ -47,6 +49,11 @@ def autostart():
     home = os.path.expanduser('~')
     subprocess.Popen([home + '/.config/qtile/autostart.sh'])
 
+# gsimplecal integration with google calendar
+def open_google_calendar():
+    today = datetime.date.today()
+    url = f"https://calendar.google.com/calendar/r/week/{today.year}/{today.month:02d}/{today.day:02d}"
+    qtile.cmd_spawn(f'xdg-open {url}')
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -228,7 +235,13 @@ screens = [
                 widget.Systray(),
                 widget.Spacer(length=5),
                 widget.Sep(foreground="#808080"),
-                widget.Clock(format="%I:%M:%S %P %a %Y-%m-%d"),
+                # extra widgets tooltips for the clock
+                # widget.Clock(format="%I:%M:%S %P %a %Y-%m-%d"),
+                # custom widget for the clock to bring up a calendar
+                widget.Clock(format="%I:%M:%S %P %a %Y-%m-%d", mouse_callbacks={
+                    'Button1': lambda: qtile.cmd_spawn('gsimplecal'),
+                    'Button3': lambda: open_google_calendar(),
+                }),
                 widget.Sep(foreground="#808080"),
                 
                 # Battery widget, comment out on desktop
@@ -248,7 +261,7 @@ screens = [
         # x11_drag_polling_rate = 60,
 
         # Wallpaper
-        wallpaper='~/.config/qtile/_bg2.png',
+        wallpaper='~/.config/qtile/_bg3.png',
         wallpaper_mode='stretch'
     ),
 ]
