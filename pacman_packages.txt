@@ -6,9 +6,7 @@ blueman
 boost
 bottom
 brightnessctl
-btop
 cmake
-crypto++
 doxygen
 dunst
 efibootmgr
@@ -18,6 +16,7 @@ git
 gnome-themes-extra
 go
 gst-plugin-pipewire
+gvfs
 gvim
 imagemagick
 intel-media-driver
