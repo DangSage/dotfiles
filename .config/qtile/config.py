@@ -206,18 +206,27 @@ screens = [
                 widget.CPUGraph(
                     graph_color="#EC93D3",
                     fill_color="#EC93D3",
-                    border_width=0
+                    border_width=0,
+                    mouse_callbacks={
+                        'Button1': lambda: qtile.cmd_spawn('alacritty -e btop'),
+                    }
                 ),
                 widget.MemoryGraph(
                     graph_color="#72D5A3",
                     fill_color="#72D5A3",
                     measure_mem=True,
-                    border_width=0
+                    border_width=0,
+                    mouse_callbacks={
+                        'Button1': lambda: qtile.cmd_spawn('alacritty -e btop'),
+                    }
                 ),
                 widget.NetGraph(
                     graph_color="#94BFF3",
                     fill_color="#94BFF3",
-                    border_width=0
+                    border_width=0,
+                    mouse_callbacks={
+                        'Button1': lambda: qtile.cmd_spawn('alacritty -e btop'),
+                    }
                 ),
                 widget.Sep(foreground="#808080"),
                 widget.DF(
@@ -243,7 +252,7 @@ screens = [
                     'Button3': lambda: open_google_calendar(),
                 }),
                 widget.Sep(foreground="#808080"),
-                
+
                 # Battery widget, comment out on desktop
                 widget.Battery(
                     format="{char} {percent:2.0%} {hour:d}:{min:02d}  ",

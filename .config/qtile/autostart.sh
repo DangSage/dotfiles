@@ -3,7 +3,7 @@
 pactl set-sink-mute @DEFAULT_SINK@ 0
 pactl set-sink-volume @DEFAULT_SINK@ 60%
 
-xinput set-prop "device" "libinput Click Method Enabled" 0 1
+xinput set-prop 10 "libinput Click Method Enabled" 0 1
 
 udiskie --tray &
 dunst &
@@ -15,3 +15,7 @@ playerctl daemon &
 blueman-applet &
 volumeicon &
 nm-applet &
+
+
+# start windows next to each other (alacritty, vim, btop)
+alacritty &

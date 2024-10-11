@@ -1,13 +1,13 @@
 [Default Applications]
 inode/directory=terminal-ranger.desktop
-application/zip=userapp-unzip-959XT2.desktop
+application/zip=xarchiver.desktop
 application/x-zerosize=userapp-alacritty -e vim-DTEHU2.desktop
 application/x-compressed-tar=userapp-tar -xvzf -B97OU2.desktop
 text/plain=userapp-alacritty -e vim-DTEHU2.desktop
 
 [Added Associations]
 inode/directory=terminal-ranger.desktop;
-application/zip=userapp-unzip-959XT2.desktop;
+application/zip=userapp-unzip-959XT2.desktop;xarchiver.desktop;
 image/png=gimp.desktop;
 application/x-zerosize=userapp-vim-5AVWT2.desktop;userapp-alacritty -e vim-DTEHU2.desktop;
 application/x-compressed-tar=userapp-unzip-959XT2.desktop;userapp-tar -xvzf -B97OU2.desktop;
