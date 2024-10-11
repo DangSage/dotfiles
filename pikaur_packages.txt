@@ -1,12 +1,12 @@
 cava
 elementary-xfce-icons
 mpdris2
+myxer-git
 pikaur
+qtile-extras
 spotify
 spotify-player
 visual-studio-code-bin
+xorgxrdp
 xrandr-invert-colors
 xrdp
-zoom
-myxer
-qtile-extras
