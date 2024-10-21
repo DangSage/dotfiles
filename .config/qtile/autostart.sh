@@ -16,6 +16,6 @@ blueman-applet &
 volumeicon &
 nm-applet &
 
+# Run vim in a floating terminal
+alacritty -e vim &
 
-# start windows next to each other (alacritty, vim, btop)
-alacritty &

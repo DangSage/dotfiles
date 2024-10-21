@@ -12,3 +12,4 @@ image/png=gimp.desktop;
 application/x-zerosize=userapp-vim-5AVWT2.desktop;userapp-alacritty -e vim-DTEHU2.desktop;
 application/x-compressed-tar=userapp-unzip-959XT2.desktop;userapp-tar -xvzf -B97OU2.desktop;
 text/plain=vim.desktop;userapp-alacritty -e vim-DTEHU2.desktop;
+image/jpeg=gimp.desktop;
