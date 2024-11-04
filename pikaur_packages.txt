@@ -10,3 +10,4 @@ visual-studio-code-bin
 xorgxrdp
 xrandr-invert-colors
 xrdp
+mandoc
