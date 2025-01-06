@@ -13,6 +13,7 @@
 " ├┴┐├─┤└─┐││    ├┬┘│ ││││  │  │ │││││││├─┤│││ ││└─┐
 " └─┘┴ ┴└─┘┴└─┘  ┴└─└─┘┘└┘  └─┘└─┘┴ ┴┴ ┴┴ ┴┘└┘─┴┘└─┘
 
+set background=dark
 colorscheme dalacritty
 filetype plugin on
 syntax on
@@ -59,7 +60,7 @@ if has('gui_running')
   set guioptions-=T
   set guioptions-=r
   set guioptions-=L
-  colorscheme tender
+  colorscheme dalacritty
 endif
 
 " enable true colors support "

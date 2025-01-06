@@ -286,9 +286,7 @@ if has('gui_running') || has('termguicolors') || &t_Co == 88 || &t_Co == 256
 
 
   " Color definition --------------------------------------------------------{{{
-    let s:dark = 1
     if &background ==# 'dark'
-      let s:dark = 1
       let s:mono_1 = ['#dcdcdc', '254']   " Foreground color
       let s:mono_2 = ['#828997', '102']   " Dimmed foreground
       let s:mono_3 = ['#808080', '59']    " Comments or less important text
@@ -318,8 +316,8 @@ if has('gui_running') || has('termguicolors') || &t_Co == 88 || &t_Co == 256
     else
       let s:mono_1 = ['#494b53', '23']       " Foreground color
       let s:mono_2 = ['#696c77', '60']       " Dimmed foreground
-      let s:mono_3 = ['#a0a1a7', '145']      " Comments or less important text
-      let s:mono_4 = ['#c2c2c3', '250']      " Less important background
+      let s:mono_3 = ['#909197', '145']      " Comments or less important text
+      let s:mono_4 = ['#b2b2b3', '250']      " Less important background
 
       let s:hue_1  = ['#0184bc', '31']       " cyan
       let s:hue_2  = ['#4078f2', '33']       " blue
@@ -334,15 +332,15 @@ if has('gui_running') || has('termguicolors') || &t_Co == 88 || &t_Co == 256
 
       let s:syntax_bg     = ['#fafafa', '255']  " Background color
       let s:syntax_gutter = ['#9e9e9e', '247']  " Line numbers
-      let s:syntax_cursor = ['#f0f0f0', '254']  " Cursor line
+      let s:syntax_cursor = ['#555555', '254']  " Cursor line
 
       let s:syntax_accent = ['#526fff', '63']  " Accent color
       let s:syntax_accent_2 = ['#0083be', '31'] " Secondary accent color
 
-      let s:vertsplit    = ['#e7e9e1', '188']  " Vert split color
-      let s:special_grey = ['#d3d3d3', '251']  " Special grey
-      let s:visual_grey  = ['#d0d0d0', '251']  " Visual mode color
-      let s:pmenu        = ['#dfdfdf', '253']  " Popup menu
+      let s:vertsplit    = ['#ccc7be', '233']  " Vert split color
+      let s:special_grey = ['#c1bbae', '16']   " Special grey
+      let s:visual_grey  = ['#c4bfb7', '17']   " Visual mode color
+      let s:pmenu        = ['#e7e5e0', '16']   " Popup menu
     endif
   let s:syntax_fg = s:mono_1
   let s:syntax_fold_bg = s:mono_3

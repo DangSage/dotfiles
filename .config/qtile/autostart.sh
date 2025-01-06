@@ -17,5 +17,5 @@ volumeicon &
 nm-applet &
 
 # Run vim in a floating terminal
-alacritty -e vim &
+alacritty -e &
 

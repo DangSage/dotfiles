@@ -44,6 +44,17 @@ mod = "mod4"
 mod1 = "mod1"
 terminal = guess_terminal()
 
+# Define color variables
+color_background = "#303030"
+color_foreground = "#ffffff"
+color_foreground_unfocused = "#808080"
+color_highlight = "#93E0E3"
+color_border_focus = "#D67979"
+color_graph_cpu = "#EC93D3"
+color_graph_mem = "#72D5A3"
+color_graph_net = "#94BFF3"
+color_battery_foreground = "#1cfc03"
+
 @hook.subscribe.startup_once
 def autostart():
     home = os.path.expanduser('~')
@@ -106,7 +117,8 @@ keys = [
     Key([mod], "f", lazy.window.toggle_floating()),
     Key([], "F11", lazy.spawn("/home/khai/.config/qtile/screenshot.sh")),
     Key([mod], "Escape", lazy.spawn("/home/khai/.config/rofi/rofi-power-menu.sh"), desc="Shutdown Qtile"),
-    Key([], "F9", lazy.spawn("xrandr-invert-colors")),
+    # theme switcher, run theme switcher script
+    Key([], "F9", lazy.spawn("/home/khai/.config/qtile/theme_switcher.sh"), desc="Switch Qtile Theme"),
 
     Key([], "XF86MonBrightnessDown",
         lazy.spawn("brightnessctl set 1%-"),
@@ -122,8 +134,6 @@ keys = [
     #Key([mod, "shift"], "/", lazy.function(display_keybindings), desc="Print keyboard bindings"),
 ]
 
-
-
 # Add key bindings to switch VTs in Wayland.
 # We can't check qtile.core.name in default config as it is loaded before qtile is started
 # We therefore defer the check until the key binding is run by using .when(func=...)
@@ -136,7 +146,6 @@ for vt in range(1, 8):
             desc=f"Switch to VT{vt}",
         )
     )
-
 
 groups = [Group(i) for i in "123456789"]
 
@@ -165,7 +174,7 @@ for i in groups:
     )
 
 layouts = [
-    layout.Columns(border_focus="#D67979",margin=15,border_width=1),
+    layout.Columns(border_focus=color_border_focus, margin=15, border_width=1),
     layout.Max(),
     # Try more layouts by unleashing below layouts.
     #layout.Stack(num_stacks=2),
@@ -185,6 +194,7 @@ widget_defaults = dict(
     fontsize=14,
     padding=5,
     type='line',
+    foreground=color_foreground,
     line_width=1,
 )
 extension_defaults = widget_defaults.copy()
@@ -194,9 +204,9 @@ screens = [
         top=bar.Bar(
             [
                 #widget.CurrentLayout(),
-                widget.GroupBox(hide_unused=True,highlight_color="#93E0E3"),
-                widget.Sep(foreground="#808080"),
-                widget.Prompt(padding = 0),
+                widget.GroupBox(hide_unused=True, highlight_color=color_highlight),
+                widget.Sep(foreground=color_foreground_unfocused),
+                widget.Prompt(padding=0),
                 widget.WindowName(
                     format="{name}",
                     max_chars=0,
@@ -205,16 +215,16 @@ screens = [
                 ),
                 widget.Spacer(),
                 widget.CPUGraph(
-                    graph_color="#EC93D3",
-                    fill_color="#EC93D3",
+                    graph_color=color_graph_cpu,
+                    fill_color=color_graph_cpu,
                     border_width=0,
                     mouse_callbacks={
                         'Button1': lambda: qtile.cmd_spawn('alacritty -e btop'),
                     }
                 ),
                 widget.MemoryGraph(
-                    graph_color="#72D5A3",
-                    fill_color="#72D5A3",
+                    graph_color=color_graph_mem,
+                    fill_color=color_graph_mem,
                     measure_mem=True,
                     border_width=0,
                     mouse_callbacks={
@@ -222,14 +232,14 @@ screens = [
                     }
                 ),
                 widget.NetGraph(
-                    graph_color="#94BFF3",
-                    fill_color="#94BFF3",
+                    graph_color=color_graph_net,
+                    fill_color=color_graph_net,
                     border_width=0,
                     mouse_callbacks={
                         'Button1': lambda: qtile.cmd_spawn('alacritty -e btop'),
                     }
                 ),
-                widget.Sep(foreground="#808080"),
+                widget.Sep(foreground=color_foreground_unfocused),
                 widget.DF(
                     partition='/home/',
                     format='U: {uf}/{s} GB ({r:.3}%)',
@@ -237,14 +247,13 @@ screens = [
                     warn_space=80,
                     measure='G',
                     padding=5,
-                    foreground='ffffff',
                     update_interval=60,
                 ),
-                widget.Sep(foreground="#808080"),
+                widget.Sep(foreground=color_foreground_unfocused),
                 widget.Spacer(),
                 widget.Systray(),
                 widget.Spacer(length=5),
-                widget.Sep(foreground="#808080"),
+                widget.Sep(foreground=color_foreground_unfocused),
                 # extra widgets tooltips for the clock
                 # widget.Clock(format="%I:%M:%S %P %a %Y-%m-%d"),
                 # custom widget for the clock to bring up a calendar
@@ -252,12 +261,12 @@ screens = [
                     'Button1': lambda: qtile.cmd_spawn('gsimplecal'),
                     'Button3': lambda: open_google_calendar(),
                 }),
-                widget.Sep(foreground="#808080"),
+                widget.Sep(foreground=color_foreground_unfocused),
 
                 # Battery widget, comment out on desktop
                 widget.Battery(
                     format="{char} {percent:2.0%} {hour:d}:{min:02d}  ",
-                    foreground="#1cfc03"
+                    foreground=color_battery_foreground
                 ),
                 #widget.QuickExit(background='C56868',foreground='F0DFAF'),
             ],
@@ -271,7 +280,7 @@ screens = [
         # x11_drag_polling_rate = 60,
 
         # Wallpaper
-        wallpaper='~/.config/qtile/_bg3.png',
+        wallpaper= "~/.config/qtile/_bg.png",
         wallpaper_mode='stretch'
     ),
 ]
@@ -301,7 +310,7 @@ floating_layout = layout.Floating(
         Match(wm_class="blueman-manager"),
         Match(title="pinentry"),  # GPG key password entry
     ],
-    border_focus="#94BFF3",
+    border_focus=color_graph_net,
 )
 auto_fullscreen = True
 focus_on_window_activation = "smart"

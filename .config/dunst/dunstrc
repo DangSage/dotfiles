@@ -27,7 +27,7 @@
     width = (300,400)
 
     # The height of a single notification, excluding the frame.
-    height = 200
+    height = 100
 
     # Position the notification in the top right corner
     origin = top-right
@@ -92,13 +92,13 @@
     highlight = "#00a2ff"
 
     # Padding between text and separator.
-    padding = 16
+    padding = 6
 
     # Horizontal padding.
-    horizontal_padding = 16
+    horizontal_padding = 6
 
     # Padding between text and icon.
-    text_icon_padding = 12
+    text_icon_padding = 10
 
     # Defines width in pixels of frame around the notification window.
     # Set to 0 to disable.
