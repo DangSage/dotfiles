@@ -117,8 +117,6 @@ keys = [
     Key([mod], "f", lazy.window.toggle_floating()),
     Key([], "F11", lazy.spawn("/home/khai/.config/qtile/screenshot.sh")),
     Key([mod], "Escape", lazy.spawn("/home/khai/.config/rofi/rofi-power-menu.sh"), desc="Shutdown Qtile"),
-    # theme switcher, run theme switcher script
-    Key([], "F9", lazy.spawn("/home/khai/.config/qtile/theme_switcher.sh"), desc="Switch Qtile Theme"),
 
     Key([], "XF86MonBrightnessDown",
         lazy.spawn("brightnessctl set 1%-"),
@@ -264,13 +262,13 @@ screens = [
                 widget.Sep(foreground=color_foreground_unfocused),
 
                 # Battery widget, comment out on desktop
-                widget.Battery(
-                    format="{char} {percent:2.0%} {hour:d}:{min:02d}  ",
-                    foreground=color_battery_foreground
-                ),
-                #widget.QuickExit(background='C56868',foreground='F0DFAF'),
+                # widget.Battery(
+                #     format="{char} {percent:2.0%} {hour:d}:{min:02d}  ",
+                #     foreground=color_battery_foreground
+                # ),
+                widget.QuickExit(background='C56868',foreground='F0DFAF'),
             ],
-            24,
+            22,
             border_width=[0, 0, 0, 0],
             background="#00000000",
         ),
