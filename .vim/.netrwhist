@@ -1,0 +1,10 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =8
+let g:netrw_dirhist_8='/home/khai/Documents'
+let g:netrw_dirhist_7='/home/khai'
+let g:netrw_dirhist_6='/home/khai/.config/rofi'
+let g:netrw_dirhist_5='/home/kylert'
+let g:netrw_dirhist_4='/home'
+let g:netrw_dirhist_3='/home/kylert/Lightworks/Logs'
+let g:netrw_dirhist_2='/home/kylert/.vim'
+let g:netrw_dirhist_1='/home/kylert/.local/share/Blista-Kanjo-Emoji'
