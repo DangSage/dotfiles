@@ -1,19 +1,26 @@
 [Default Applications]
-inode/directory=terminal-ranger.desktop
+x-scheme-handler/terminal=alacritty.desktop
+inode/directory=alacritty.desktop
 application/zip=xarchiver.desktop
-application/x-zerosize=userapp-alacritty -e vim-DTEHU2.desktop
-application/x-compressed-tar=userapp-tar -xvzf -B97OU2.desktop
-text/plain=userapp-alacritty -e vim-DTEHU2.desktop
-application/octet-stream=userapp-tuxguitar-bin-2ZC7Y2.desktop
+application/x-zerosize=alacritty.desktop
+application/x-compressed-tar=alacritty.desktop
+text/plain=alacritty.desktop
+application/octet-stream=tuxguitar.desktop
+application/x-blender=blender.desktop
+application/vnd.appimage=alacritty.desktop
+model/obj=blender.desktop
 
 [Added Associations]
-inode/directory=terminal-ranger.desktop;
-application/zip=userapp-unzip-959XT2.desktop;xarchiver.desktop;
+inode/directory=alacritty.desktop;terminal-ranger.desktop;
+application/zip=xarchiver.desktop;
 image/png=gimp.desktop;
-application/x-zerosize=userapp-vim-5AVWT2.desktop;userapp-alacritty -e vim-DTEHU2.desktop;
-application/x-compressed-tar=userapp-unzip-959XT2.desktop;userapp-tar -xvzf -B97OU2.desktop;
-text/plain=vim.desktop;userapp-alacritty -e vim-DTEHU2.desktop;
+application/x-zerosize=alacritty.desktop;
+application/x-compressed-tar=alacritty.desktop;
+text/plain=alacritty.desktop;vim.desktop;
 image/jpeg=gimp.desktop;
-text/x-makefile=userapp-alacritty -e vim-DTEHU2.desktop;
-application/x-shellscript=userapp-alacritty -e vim-DTEHU2.desktop;
-application/octet-stream=userapp-tuxguitar-bin-2ZC7Y2.desktop;
+text/x-makefile=alacritty.desktop;
+application/x-shellscript=alacritty.desktop;
+application/octet-stream=tuxguitar.desktop;
+application/x-blender=blender.desktop;
+application/vnd.appimage=alacritty.desktop;
+model/obj=blender.desktop;

@@ -117,8 +117,6 @@ keys = [
     Key([mod], "f", lazy.window.toggle_floating()),
     Key([], "F11", lazy.spawn("/home/khai/.config/qtile/screenshot.sh")),
     Key([mod], "Escape", lazy.spawn("/home/khai/.config/rofi/rofi-power-menu.sh"), desc="Shutdown Qtile"),
-    # theme switcher, run theme switcher script
-    Key([], "F9", lazy.spawn("/home/khai/.config/qtile/theme_switcher.sh"), desc="Switch Qtile Theme"),
 
     Key([], "XF86MonBrightnessDown",
         lazy.spawn("brightnessctl set 1%-"),
@@ -190,9 +188,9 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="Caskaydia Cove Nerd Font Mono",
-    fontsize=14,
-    padding=5,
+    font="Hack Nerd Font Mono",
+    fontsize=11,
+    padding=4,
     type='line',
     foreground=color_foreground,
     line_width=1,
@@ -264,13 +262,13 @@ screens = [
                 widget.Sep(foreground=color_foreground_unfocused),
 
                 # Battery widget, comment out on desktop
-                widget.Battery(
-                    format="{char} {percent:2.0%} {hour:d}:{min:02d}  ",
-                    foreground=color_battery_foreground
-                ),
-                #widget.QuickExit(background='C56868',foreground='F0DFAF'),
+                # widget.Battery(
+                #     format="{char} {percent:2.0%} {hour:d}:{min:02d}  ",
+                #     foreground=color_battery_foreground
+                # ),
+                widget.QuickExit(background='C56868',foreground='F0DFAF'),
             ],
-            24,
+            22,
             border_width=[0, 0, 0, 0],
             background="#00000000",
         ),
@@ -300,7 +298,6 @@ floats_kept_above = True
 cursor_warp = False
 floating_layout = layout.Floating(
     float_rules=[
-        # Run the utility of `xprop` to see the wm class and name of an X client.
         *layout.Floating.default_float_rules,
         Match(wm_class="confirmreset"),  # gitk
         Match(wm_class="makebranch"),  # gitk
@@ -311,9 +308,10 @@ floating_layout = layout.Floating(
         Match(title="pinentry"),  # GPG key password entry
     ],
     border_focus=color_graph_net,
+    bring_front_click=True,  # Ensure floating windows are brought to front when clicked
 )
 auto_fullscreen = True
-focus_on_window_activation = "smart"
+focus_on_window_activation = "true"
 reconfigure_screens = False
 auto_minimize = True
 
