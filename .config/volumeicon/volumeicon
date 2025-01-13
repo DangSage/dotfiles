@@ -1,6 +1,5 @@
 [Alsa]
 card=default
-logarithmic_scale=false
 
 [Notification]
 show_notification=true
@@ -11,7 +10,6 @@ stepsize=10
 onclick=myxer
 theme=Default
 use_panel_specific_icons=true
-reverse_scroll_direction=false
 lmb_slider=true
 mmb_mute=false
 use_horizontal_slider=false

@@ -33,7 +33,7 @@
     active-background:           #30303000;
     selected-active-background:  #141411;
 
-    font:                        "Caskaydia Cove Nerd Font Mono SemiLight 13";
+    font:                        "Hack Nerd Font Mono Regular 13";
 }
 window {
     background-color: @background;

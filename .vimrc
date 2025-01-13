@@ -7,7 +7,7 @@
 "  █▄▄▄█  █▄▄▄█ █▄▄▄█▄█   █▄█▄▄▄█  █▄█▄▄▄▄▄▄▄█
 
 " Use System Clipboard
-":set clipboard=unnamedplus
+set clipboard=unnamedplus
 
 " ┌┐ ┌─┐┌─┐┬┌─┐  ┬─┐┬ ┬┌┐┌  ┌─┐┌─┐┌┬┐┌┬┐┌─┐┌┐┌┌┬┐┌─┐
 " ├┴┐├─┤└─┐││    ├┬┘│ ││││  │  │ │││││││├─┤│││ ││└─┐
@@ -74,12 +74,12 @@ endif
 " ╠╩╗├┤ └┬┘├┴┐││││ ││└─┐  ├┤ │ │├┬┘  ╔╩╦╝  ║  │  │├─┘├┴┐│ │├─┤├┬┘ ││
 " ╩ ╩└─┘ ┴ └─┘┴┘└┘─┴┘└─┘  └  └─┘┴└─  ╩ ╚═  ╚═╝┴─┘┴┴  └─┘└─┘┴ ┴┴└──┴┘
 
-nnoremap <C-c> "+y
+vnoremap <C-x> "+x
 vnoremap <C-c> "+y
+noremap  <C-v> "+gP
+inoremap <C-v> <C-r>+
 
-vmap <C-x> "+x
-map <C-p> "+p
-map <Leader>p "+P
+noremap <C-q> <C-v>
 
 " Vertical Motions Mappings
 nnoremap <C-d> <C-d>zz
