@@ -30,11 +30,11 @@ foreground = "0xdcdcdc"
 TERM = "xterm-256color"
 
 [font]
-size = 9
+size = 11
 
 [font.normal]
-family = "CaskaydiaCoveNerdFontMono"
-style = "SemiLight"
+family = "HackNerdFontMono"
+style = "Regular"
 
 [[keyboard.bindings]]
 action = "Paste"
@@ -158,7 +158,7 @@ history = 100000
 
 [window]
 dynamic_title = true
-padding = { x = 4, y = 3 }
+padding = { x = 6, y = 6 }
 dynamic_padding = true
 opacity = 1.0
 

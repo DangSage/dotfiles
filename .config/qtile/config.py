@@ -188,9 +188,9 @@ layouts = [
 ]
 
 widget_defaults = dict(
-    font="Caskaydia Cove Nerd Font Mono",
-    fontsize=14,
-    padding=5,
+    font="Hack Nerd Font Mono",
+    fontsize=11,
+    padding=4,
     type='line',
     foreground=color_foreground,
     line_width=1,
@@ -298,7 +298,6 @@ floats_kept_above = True
 cursor_warp = False
 floating_layout = layout.Floating(
     float_rules=[
-        # Run the utility of `xprop` to see the wm class and name of an X client.
         *layout.Floating.default_float_rules,
         Match(wm_class="confirmreset"),  # gitk
         Match(wm_class="makebranch"),  # gitk
@@ -309,9 +308,10 @@ floating_layout = layout.Floating(
         Match(title="pinentry"),  # GPG key password entry
     ],
     border_focus=color_graph_net,
+    bring_front_click=True,  # Ensure floating windows are brought to front when clicked
 )
 auto_fullscreen = True
-focus_on_window_activation = "smart"
+focus_on_window_activation = "true"
 reconfigure_screens = False
 auto_minimize = True
 

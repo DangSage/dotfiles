@@ -28,7 +28,6 @@ go
 gsimplecal
 gst-plugin-pipewire
 gvfs
-gvim
 imagemagick
 inetutils
 intel-media-driver
