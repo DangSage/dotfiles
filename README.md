@@ -78,6 +78,8 @@ make
 sudo make install
 ```
 
+It's also worthy to note you WILL need uninstall the `vim` package from the official repositories before compiling Vim from source. This WILL cause conflicts in the package manager.
+
 <!-- line here -->
 **Note:** You may need to install the `python-pip` package to install the `neovim` package.
 

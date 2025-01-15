@@ -270,7 +270,7 @@ screens = [
             ],
             22,
             border_width=[0, 0, 0, 0],
-            background="#00000000",
+            background="#303030ff",
         ),
         # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
         # By default we handle these events delayed to already improve performance, however your system might still be struggling

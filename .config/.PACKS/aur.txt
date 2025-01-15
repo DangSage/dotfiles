@@ -1,4 +1,3 @@
-cava
 elementary-xfce-icons
 mpdris2
 myxer-git

@@ -36,7 +36,6 @@ intltool
 iwd
 jre-openjdk
 libpulse
-librespot
 libva-intel-driver
 libva-mesa-driver
 linux
@@ -50,8 +49,6 @@ mpdris2
 mpv
 mtpfs
 myxer-git
-nano
-neofetch
 neovim
 network-manager-applet
 networkmanager
