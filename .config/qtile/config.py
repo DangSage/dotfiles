@@ -1,36 +1,9 @@
-# Copyright (c) 2010 Aldo Cortesi
-# Copyright (c) 2010, 2014 dequis
-# Copyright (c) 2012 Randall Ma
-# Copyright (c) 2012-2014 Tycho Andersen
-# Copyright (c) 2012 Craig Barnes
-# Copyright (c) 2013 horsik
-# Copyright (c) 2013 Tao Sauvage
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 import gi
 import os
 import subprocess
 import datetime
 
 gi.require_version('Notify', '0.7')
-from gi.repository import Notify, GLib
 from backlight_notify import notify_brightness
 
 from libqtile import qtile, hook
@@ -40,20 +13,13 @@ from libqtile.utils import guess_terminal
 from libqtile import bar, layout  # Core Qtile components
 from qtile_extras import widget
 
+from mycolors import Colors
+from layouts import dColumns
+
 mod = "mod4"
 mod1 = "mod1"
 terminal = guess_terminal()
 
-# Define color variables
-color_background = "#303030"
-color_foreground = "#ffffff"
-color_foreground_unfocused = "#808080"
-color_highlight = "#93E0E3"
-color_border_focus = "#D67979"
-color_graph_cpu = "#EC93D3"
-color_graph_mem = "#72D5A3"
-color_graph_net = "#94BFF3"
-color_battery_foreground = "#1cfc03"
 
 @hook.subscribe.startup_once
 def autostart():
@@ -172,27 +138,55 @@ for i in groups:
     )
 
 layouts = [
-    layout.Columns(border_focus=color_border_focus, margin=15, border_width=1),
-    layout.Max(),
+    dColumns(
+        border_focus=Colors.border_focus,
+        border_normal=Colors.bg_unfocused,
+        border_width=1,
+        margin=19,
+        margin_on_single=20,
+        num_columns=2,
+        split=True,
+    ),
+    layout.TreeTab(
+        active_bg=Colors.fg_unfocused,
+        active_fg=Colors.fg,
+        bg_color=Colors.bg_unfocused,
+        border_width=2,
+        font='Hack',
+        fontshadow=None,
+        fontsize=11,
+        inactive_bg=Colors.bg_unfocused,
+        inactive_fg=Colors.fg,
+        level_shift=8,
+        margin_left=6,
+        margin_y=6,
+        padding_left=6,
+        padding_x=6,
+        padding_y=2,
+        panel_width=200,
+        place_right=True,
+        previous_on_rm=False,
+        section_bottom=6,
+        section_fg=Colors.fg,
+        section_fontsize=11,
+        section_left=4,
+        section_padding=4,
+        section_top=4,
+        sections=['Default'],
+        urgent_bg='ff0000',
+        urgent_fg=Colors.fg,
+        vspace=0,
+        margin=10,  # Add margin to the windows
+    ),
     # Try more layouts by unleashing below layouts.
-    #layout.Stack(num_stacks=2),
-    #layout.Bsp(),
-    #layout.Matrix(),
-    #layout.MonadTall(),
-    #layout.MonadWide(),
-    #layout.RatioTile(),
-    #layout.Tile(),
-    #layout.TreeTab(),
-    #layout.Verticaltile(),
-    #layout.Zoomy(),
 ]
 
 widget_defaults = dict(
-    font="Hack Nerd Font Mono",
-    fontsize=11,
+    font="Hack Nerd Font",
+    fontsize=12,
     padding=4,
     type='line',
-    foreground=color_foreground,
+    foreground=Colors.fg,
     line_width=1,
 )
 extension_defaults = widget_defaults.copy()
@@ -202,8 +196,8 @@ screens = [
         top=bar.Bar(
             [
                 #widget.CurrentLayout(),
-                widget.GroupBox(hide_unused=True, highlight_color=color_highlight),
-                widget.Sep(foreground=color_foreground_unfocused),
+                widget.GroupBox(hide_unused=True, highlight_color=Colors.highlight),
+                widget.Sep(foreground=Colors.fg_unfocused),
                 widget.Prompt(padding=0),
                 widget.WindowName(
                     format="{name}",
@@ -213,16 +207,16 @@ screens = [
                 ),
                 widget.Spacer(),
                 widget.CPUGraph(
-                    graph_color=color_graph_cpu,
-                    fill_color=color_graph_cpu,
+                    graph_color=Colors.graph_cpu,
+                    fill_color=Colors.graph_cpu,
                     border_width=0,
                     mouse_callbacks={
                         'Button1': lambda: qtile.cmd_spawn('alacritty -e btop'),
                     }
                 ),
                 widget.MemoryGraph(
-                    graph_color=color_graph_mem,
-                    fill_color=color_graph_mem,
+                    graph_color=Colors.graph_mem,
+                    fill_color=Colors.graph_mem,
                     measure_mem=True,
                     border_width=0,
                     mouse_callbacks={
@@ -230,14 +224,14 @@ screens = [
                     }
                 ),
                 widget.NetGraph(
-                    graph_color=color_graph_net,
-                    fill_color=color_graph_net,
+                    graph_color=Colors.graph_net,
+                    fill_color=Colors.graph_net,
                     border_width=0,
                     mouse_callbacks={
                         'Button1': lambda: qtile.cmd_spawn('alacritty -e btop'),
                     }
                 ),
-                widget.Sep(foreground=color_foreground_unfocused),
+                widget.Sep(foreground=Colors.fg_unfocused),
                 widget.DF(
                     partition='/home/',
                     format='U: {uf}/{s} GB ({r:.3}%)',
@@ -247,11 +241,11 @@ screens = [
                     padding=5,
                     update_interval=60,
                 ),
-                widget.Sep(foreground=color_foreground_unfocused),
+                widget.Sep(foreground=Colors.fg_unfocused),
                 widget.Spacer(),
                 widget.Systray(),
                 widget.Spacer(length=5),
-                widget.Sep(foreground=color_foreground_unfocused),
+                widget.Sep(foreground=Colors.fg_unfocused),
                 # extra widgets tooltips for the clock
                 # widget.Clock(format="%I:%M:%S %P %a %Y-%m-%d"),
                 # custom widget for the clock to bring up a calendar
@@ -259,18 +253,18 @@ screens = [
                     'Button1': lambda: qtile.cmd_spawn('gsimplecal'),
                     'Button3': lambda: open_google_calendar(),
                 }),
-                widget.Sep(foreground=color_foreground_unfocused),
+                widget.Sep(foreground=Colors.fg_unfocused),
 
                 # Battery widget, comment out on desktop
                 # widget.Battery(
                 #     format="{char} {percent:2.0%} {hour:d}:{min:02d}  ",
-                #     foreground=color_battery_foreground
+                #     foreground=Colors.battery_fg
                 # ),
-                widget.QuickExit(background='C56868',foreground='F0DFAF'),
+                widget.QuickExit(foreground=Colors.exit_fg),
             ],
-            22,
+            20,
             border_width=[0, 0, 0, 0],
-            background="#303030ff",
+            background="303030ff",
         ),
         # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
         # By default we handle these events delayed to already improve performance, however your system might still be struggling
@@ -307,7 +301,7 @@ floating_layout = layout.Floating(
         Match(wm_class="blueman-manager"),
         Match(title="pinentry"),  # GPG key password entry
     ],
-    border_focus=color_graph_net,
+    border_focus=Colors.graph_net,
     bring_front_click=True,  # Ensure floating windows are brought to front when clicked
 )
 auto_fullscreen = True
