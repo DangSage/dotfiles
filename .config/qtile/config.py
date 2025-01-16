@@ -14,7 +14,6 @@ from libqtile import bar, layout  # Core Qtile components
 from qtile_extras import widget
 
 from mycolors import Colors
-from layouts import dColumns
 
 mod = "mod4"
 mod1 = "mod1"
@@ -138,7 +137,7 @@ for i in groups:
     )
 
 layouts = [
-    dColumns(
+    layout.Columns(
         border_focus=Colors.border_focus,
         border_normal=Colors.bg_unfocused,
         border_width=1,
