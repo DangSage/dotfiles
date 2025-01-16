@@ -11,4 +11,3 @@ class Colors:
     graph_net = "#94BFF3"
     battery_fg = "#1cfc03"
     exit_fg = "#ff0000"
-    exit_bg = "#000000"
