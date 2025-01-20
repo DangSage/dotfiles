@@ -8,9 +8,10 @@ export GDK_SCALE=0.75
 xrandr --output HDMI-0 --mode 1920x1080 --rate 140
 #xinput set-prop 10 "libinput Click Method Enabled" 0 1
 
+conky -c ~/.config/conky/.conkyrc &
 udiskie --tray &
 dunst &
-picom &
+picom -b &
 mpd &
 mpDris2 &
 playerctl daemon &
@@ -19,6 +20,5 @@ blueman-applet &
 volumeicon &
 nm-applet &
 
-# Run vim in a floating terminal
-alacritty
-
+# Run vim in a floating window
+alacritty --class floatingVim -e vim &

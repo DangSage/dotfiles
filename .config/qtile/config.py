@@ -4,19 +4,16 @@ import subprocess
 import datetime
 
 gi.require_version('Notify', '0.7')
-from backlight_notify import notify_brightness
 
 from libqtile import qtile, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from libqtile import bar, layout  # Core Qtile components
-from qtile_extras import widget
-
-from mycolors import Colors
+from qtile_extras import widget  # Custom widgets
+from mycolors import colors
 
 mod = "mod4"
-mod1 = "mod1"
 terminal = guess_terminal()
 
 
@@ -31,68 +28,66 @@ def open_google_calendar():
     url = f"https://calendar.google.com/calendar/r/week/{today.year}/{today.month:02d}/{today.day:02d}"
     qtile.cmd_spawn(f'xdg-open {url}')
 
+
+from libqtile.config import EzKey
+from libqtile.lazy import lazy
+keymap = {
+    # M = mod, S = shift, A = alt, C = control
+    # Window management
+    'M-h': (lazy.layout.left(), "Move focus to left"),
+    'M-j': (lazy.layout.down(), "Move focus down"),
+    'M-k': (lazy.layout.up(), "Move focus up"),
+    'M-l': (lazy.layout.right(), "Move focus to right"),
+    'M-S-h': (lazy.layout.move_left(), "Move window to the left"),
+    'M-S-j': (lazy.layout.move_down(), "Move window down"),
+    'M-S-k': (lazy.layout.move_up(), "Move window up"),
+    'M-S-l': (lazy.layout.move_right(), "Move window to the right"),
+    'M-S-C-j': (lazy.layout.section_down(), "Move window to the next section"),
+    'M-S-C-k': (lazy.layout.section_up(), "Move window to the previous section"),
+    'M-S-C-<Return>': (lazy.layout.add_section(), "Add a new section"),
+    'M-S-C-q': (lazy.layout.remove_section(), "Remove current section"),
+    'M-A-h': (lazy.layout.integrate_left(), "Integrate window to the left"),
+    'M-A-j': (lazy.layout.integrate_down(), "Integrate window down"),
+    'M-A-k': (lazy.layout.integrate_up(), "Integrate window up"),
+    'M-A-l': (lazy.layout.integrate_right(), "Integrate window to the right"),
+    'M-d': (lazy.layout.mode_horizontal(), "Switch to horizontal mode"),
+    'M-v': (lazy.layout.mode_vertical(), "Switch to vertical mode"),
+    'M-S-d': (lazy.layout.mode_horizontal_split(), "Split layout horizontally"),
+    'M-S-v': (lazy.layout.mode_vertical_split(), "Split layout vertically"),
+    'M-a': (lazy.layout.grow_width(20), "Grow width by 20"),
+    'M-x': (lazy.layout.grow_width(-20), "Shrink width by 20"),
+    'M-S-a': (lazy.layout.grow_height(20), "Grow height by 20"),
+    'M-S-x': (lazy.layout.grow_height(-20), "Shrink height by 20"),
+    'M-C-5': (lazy.layout.size(500), "Set size to 500"),
+    'M-C-8': (lazy.layout.size(800), "Set size to 800"),
+    'M-n': (lazy.layout.reset_size(), "Reset size"),
+    'A-<Tab>': (lazy.layout.next(), "Move to next window"),
+    'M-<return>': (lazy.spawn(terminal), "Launch terminal"),
+    'M-q': (lazy.window.kill(), "Kill focused window"),
+    'M-<Tab>': (lazy.next_layout(), "Toggle between layouts"),
+    'M-f': (lazy.window.toggle_floating(), "Toggle floating mode"),
+
+    # Application launchers
+    'A-<Space>': (lazy.spawn("rofi -show drun"), "Launch rofi"),
+    'M-w': (lazy.spawn("firefox"), "Launch firefox"),
+    '<F12>': (lazy.spawn("/home/khai/.config/qtile/screenshot.sh"), "Take screenshot"),
+
+    # System controls
+    'M-<Escape>': (lazy.spawn("/home/khai/.config/rofi/rofi-power-menu.sh"), "Shutdown Qtile"),
+    'M-r' : (lazy.spawncmd(), "Spawn command"),
+    'M-S-<Escape>': (lazy.spawn("systemctl suspend"), "Suspend system"),
+    'M-C-r': (lazy.restart(), "Restart Qtile"),
+
+    # display keybindings
+    'M-<slash>': (lazy.spawn("keyb -p | rofi -dmenu"), "Display keybindings"),
+
+
+}
+
 keys = [
-    # A list of available commands that can be bound to keys can be found
-    # at https://docs.qtile.org/en/latest/manual/config/lazy.html
-    # Switch between windows
-    Key([mod], "h", lazy.layout.left(), desc="Move focus to left"),
-    Key([mod], "l", lazy.layout.right(), desc="Move focus to right"),
-    Key([mod], "j", lazy.layout.down(), desc="Move focus down"),
-    Key([mod], "k", lazy.layout.up(), desc="Move focus up"),
-    Key([mod1], "Tab", lazy.group.next_window(), desc="Move focus to next window"),
-    Key([mod1, "shift"], "Tab", lazy.group.prev_window(), desc="Move focus to previous window"),
-    # Move windows between left/right columns or move up/down in current stack.
-    # Moving out of range in Columns layout will create new column.
-    Key([mod, "shift"], "h", lazy.layout.shuffle_left(), desc="Move window to the left"),
-    Key([mod, "shift"], "l", lazy.layout.shuffle_right(), desc="Move window to the right"),
-    Key([mod, "shift"], "j", lazy.layout.shuffle_down(), desc="Move window down"),
-    Key([mod, "shift"], "k", lazy.layout.shuffle_up(), desc="Move window up"),
-    # Grow windows. If current window is on the edge of screen and direction
-    # will be to screen edge - window would shrink.
-    Key([mod, "control"], "h", lazy.layout.grow_left(), desc="Grow window to the left"),
-    Key([mod, "control"], "l", lazy.layout.grow_right(), desc="Grow window to the right"),
-    Key([mod, "control"], "j", lazy.layout.grow_down(), desc="Grow window down"),
-    Key([mod, "control"], "k", lazy.layout.grow_up(), desc="Grow window up"),
-    Key([mod], "n", lazy.layout.normalize(), desc="Reset all window sizes"),
-    # Toggle between split and unsplit sides of stack.
-    # Split = all windows displayed
-    # Unsplit = 1 window displayed, like Max layout, but still with
-    # multiple stack panes
-    Key(
-        [mod, "shift"],
-        "Return",
-        lazy.layout.toggle_split(),
-        desc="Toggle between split and unsplit sides of stack",
-    ),
-    Key([mod], "Return", lazy.spawn(terminal), desc="Launch terminal"),
-    # Toggle between different layouts as defined below
-    Key([mod], "Tab", lazy.next_layout(), desc="Toggle between layouts"),
-    Key([mod], "c", lazy.window.kill(), desc="Kill focused window"),
-    Key(
-        [mod],
-        "f",
-        lazy.window.toggle_fullscreen(),
-        desc="Toggle fullscreen on the focused window",
-    ),
-    Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
-
-    Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-    Key([mod1], "space", lazy.spawn("rofi -show drun")),
-    Key([mod], "w", lazy.spawn("firefox")),
-    Key([mod], "f", lazy.window.toggle_floating()),
-    Key([], "F11", lazy.spawn("/home/khai/.config/qtile/screenshot.sh")),
-    Key([mod], "Escape", lazy.spawn("/home/khai/.config/rofi/rofi-power-menu.sh"), desc="Shutdown Qtile"),
-
-    Key([], "XF86MonBrightnessDown",
-        lazy.spawn("brightnessctl set 1%-"),
-        lazy.function(lambda qtile: notify_brightness()),
-        desc="Lower Brightness by 5%"
-    ),
-    Key([], "XF86MonBrightnessUp",
-        lazy.spawn("brightnessctl set +1%"),
-        lazy.function(lambda qtile: notify_brightness()),
-        desc="Raise Brightness by 5%"
-    ),
+    *[EzKey(k, v[0], desc=v[1]) for k, v in keymap.items()],
+    # Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
+    # Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
 
     #Key([mod, "shift"], "/", lazy.function(display_keybindings), desc="Print keyboard bindings"),
 ]
@@ -137,45 +132,42 @@ for i in groups:
     )
 
 layouts = [
-    layout.Columns(
-        border_focus=Colors.border_focus,
-        border_normal=Colors.bg_unfocused,
+    layout.Plasma(
+        border_focus=colors[5],
+        border_normal="#000000",
         border_width=1,
-        margin=19,
-        margin_on_single=20,
-        num_columns=2,
-        split=True,
+        border_width_single=0,
+        margin=11,
     ),
     layout.TreeTab(
-        active_bg=Colors.fg_unfocused,
-        active_fg=Colors.fg,
-        bg_color=Colors.bg_unfocused,
-        border_width=2,
-        font='Hack',
+        active_bg=colors[7],
+        active_fg=colors[0],
+        bg_color=colors[2],
+        border_width=1,
+        font='Hack Nerd Font',
         fontshadow=None,
-        fontsize=11,
-        inactive_bg=Colors.bg_unfocused,
-        inactive_fg=Colors.fg,
+        fontsize=10,
+        inactive_bg=colors[2],
+        inactive_fg=colors[1],
         level_shift=8,
         margin_left=6,
         margin_y=6,
-        padding_left=6,
+        padding_left=2,
         padding_x=6,
         padding_y=2,
-        panel_width=200,
-        place_right=True,
+        panel_width=205,
         previous_on_rm=False,
         section_bottom=6,
-        section_fg=Colors.fg,
+        section_fg=colors[1],
         section_fontsize=11,
-        section_left=4,
+        section_left=2,
         section_padding=4,
         section_top=4,
-        sections=['Default'],
-        urgent_bg='ff0000',
-        urgent_fg=Colors.fg,
+        sections=['1', '2', '3', '4'],
+        urgent_bg=colors[10],
+        urgent_fg=colors[1],
         vspace=0,
-        margin=10,  # Add margin to the windows
+        margin=0,  # Align text margins from the left
     ),
     # Try more layouts by unleashing below layouts.
 ]
@@ -183,10 +175,9 @@ layouts = [
 widget_defaults = dict(
     font="Hack Nerd Font",
     fontsize=12,
-    padding=4,
+    padding=5,
     type='line',
-    foreground=Colors.fg,
-    line_width=1,
+    foreground=colors[1],
 )
 extension_defaults = widget_defaults.copy()
 
@@ -194,76 +185,84 @@ screens = [
     Screen(
         top=bar.Bar(
             [
-                #widget.CurrentLayout(),
-                widget.GroupBox(hide_unused=True, highlight_color=Colors.highlight),
-                widget.Sep(foreground=Colors.fg_unfocused),
-                widget.Prompt(padding=0),
+                # extra widgets tooltips for the clock
+                # widget.Clock(format="%I:%M:%S %P %a %Y-%m-%d"),
+                widget.GroupBox(
+                    highlight_color=colors[5],
+                    highlight_method='line',
+                    padding=3,
+                    borderwidth=3,
+                    active=colors[1],
+                    inactive=colors[3],
+                    this_current_screen_border=colors[5],
+                    this_screen_border=colors[5],
+                    other_screen_border=colors[5],
+                ),
+                widget.Sep(foreground=colors[3]),
                 widget.WindowName(
-                    format="{name}",
                     max_chars=0,
                     width=400,
                     scroll_fixed_width=True,
+                    foreground=colors[8],
                 ),
                 widget.Spacer(),
-                widget.CPUGraph(
-                    graph_color=Colors.graph_cpu,
-                    fill_color=Colors.graph_cpu,
-                    border_width=0,
-                    mouse_callbacks={
-                        'Button1': lambda: qtile.cmd_spawn('alacritty -e btop'),
-                    }
+                widget.Net(
+                    format='󱚶 {down:6.2f} ',
+                    foreground=colors[12],
+                    mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('alacritty -e btop -p 2')},
                 ),
-                widget.MemoryGraph(
-                    graph_color=Colors.graph_mem,
-                    fill_color=Colors.graph_mem,
-                    measure_mem=True,
-                    border_width=0,
-                    mouse_callbacks={
-                        'Button1': lambda: qtile.cmd_spawn('alacritty -e btop'),
-                    }
-                ),
-                widget.NetGraph(
-                    graph_color=Colors.graph_net,
-                    fill_color=Colors.graph_net,
-                    border_width=0,
-                    mouse_callbacks={
-                        'Button1': lambda: qtile.cmd_spawn('alacritty -e btop'),
-                    }
-                ),
-                widget.Sep(foreground=Colors.fg_unfocused),
                 widget.DF(
-                    partition='/home/',
-                    format='U: {uf}/{s} GB ({r:.3}%)',
+                    partition='/',
+                    format=' {r:.0f}% ',
                     visible_on_warn=False,
-                    warn_space=80,
                     measure='G',
-                    padding=5,
                     update_interval=60,
+                    foreground=colors[11],
+                    mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('alacritty -e gdu')}
                 ),
-                widget.Sep(foreground=Colors.fg_unfocused),
+                widget.CPU(
+                    format=" {load_percent:.0f}% ",
+                    markup=True,
+                    foreground=colors[7],
+                    padding=5,
+                    mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('alacritty -e btop -p 1')}
+                ),
+                widget.Memory(
+                    format=" {MemPercent:.0f}% ",
+                    markup=True,
+                    foreground=colors[4],
+                    padding=5,
+                    mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('alacritty -e btop -p 2')}
+                ),
+
                 widget.Spacer(),
-                widget.Systray(),
-                widget.Spacer(length=5),
-                widget.Sep(foreground=Colors.fg_unfocused),
-                # extra widgets tooltips for the clock
-                # widget.Clock(format="%I:%M:%S %P %a %Y-%m-%d"),
-                # custom widget for the clock to bring up a calendar
+                widget.Systray(
+                    padding=5,
+                    icon_size=20,
+                ),
+
+                widget.Sep(foreground=colors[3]),
                 widget.Clock(format="%I:%M:%S %P %a %Y-%m-%d", mouse_callbacks={
                     'Button1': lambda: qtile.cmd_spawn('gsimplecal'),
                     'Button3': lambda: open_google_calendar(),
                 }),
-                widget.Sep(foreground=Colors.fg_unfocused),
+                widget.Sep(foreground=colors[3]),
+                widget.TextBox(
+                    text='󰍜 ',
+                    foreground=colors[5],
+                    padding=5,
+                    mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('/home/khai/.config/rofi/rofi-power-menu.sh')}
+                ),
 
                 # Battery widget, comment out on desktop
                 # widget.Battery(
                 #     format="{char} {percent:2.0%} {hour:d}:{min:02d}  ",
-                #     foreground=Colors.battery_fg
+                #     foreground=colors[7]
                 # ),
-                widget.QuickExit(foreground=Colors.exit_fg),
             ],
-            20,
+            21,
             border_width=[0, 0, 0, 0],
-            background="303030ff",
+            background=colors[0],
         ),
         # You can uncomment this variable if you see that on X11 floating resize/moving is laggy
         # By default we handle these events delayed to already improve performance, however your system might still be struggling
@@ -299,8 +298,9 @@ floating_layout = layout.Floating(
         Match(title="branchdialog"),  # gitk
         Match(wm_class="blueman-manager"),
         Match(title="pinentry"),  # GPG key password entry
+        Match(wm_class='floatingVim'),
     ],
-    border_focus=Colors.graph_net,
+    border_focus=colors[8],
     bring_front_click=True,  # Ensure floating windows are brought to front when clicked
 )
 auto_fullscreen = True

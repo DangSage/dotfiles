@@ -12,4 +12,14 @@
 	<startup-notify/>
 	<directories/>
 </action>
+<action>
+	<icon></icon>
+	<name>Vim</name>
+	<submenu></submenu>
+	<unique-id>1737320271700156-1</unique-id>
+	<command>alacritty -e vim %f</command>
+	<description>vim w/ alacritty</description>
+	<range>*</range>
+	<patterns>*</patterns>
+</action>
 </actions>
