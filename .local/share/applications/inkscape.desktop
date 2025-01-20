@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Inkscape
+Comment=Inkscape Vector Suite
+Icon=/home/khai/Documents/Programs/inkscape/inkscape.svg
+Exec=/home/khai/Documents/Programs/inkscape/inkscape-1_4-x86_64.AppImage
+Terminal=false
+Catagories=Graphics;

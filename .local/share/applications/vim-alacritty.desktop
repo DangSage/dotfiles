@@ -1,0 +1,11 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+NoDisplay=false
+Exec=alacritty -e vim %f
+Name=Vim in Alacritty
+Comment=Edit text files with Vim in Alacritty terminal
+Icon=vim
+Terminal=false
+Categories=Utility;TextEditor;

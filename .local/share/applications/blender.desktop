@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Blender
+Comment=Blender 3D Creation Suite
+Exec=/opt/blender-3.6.19-linux-x64/blender
+Icon=/opt/blender-3.6.19-linux-x64/blender.svg
+Terminal=false
+Type=Application
+Categories=Graphics;3DGraphics;
