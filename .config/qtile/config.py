@@ -13,6 +13,8 @@ from libqtile import bar, layout  # Core Qtile components
 from qtile_extras import widget  # Custom widgets
 from mycolors import colors
 
+from backlight_notify import notify_brightness
+
 mod = "mod4"
 terminal = guess_terminal()
 
@@ -70,7 +72,6 @@ keymap = {
     # Application launchers
     'A-<Space>': (lazy.spawn("rofi -show drun"), "Launch rofi"),
     'M-w': (lazy.spawn("firefox"), "Launch firefox"),
-    '<F12>': (lazy.spawn("/home/khai/.config/qtile/screenshot.sh"), "Take screenshot"),
 
     # System controls
     'M-<Escape>': (lazy.spawn("/home/khai/.config/rofi/rofi-power-menu.sh"), "Shutdown Qtile"),
@@ -79,17 +80,33 @@ keymap = {
     'M-C-r': (lazy.restart(), "Restart Qtile"),
 
     # display keybindings
-    'M-<slash>': (lazy.spawn("keyb -p | rofi -dmenu"), "Display keybindings"),
-
-
+    # 'M-<slash>': (lazy.spawn("keyb -p | rofi -dmenu"), "Display keybindings"),
 }
 
 keys = [
     *[EzKey(k, v[0], desc=v[1]) for k, v in keymap.items()],
     # Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     # Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-
     #Key([mod, "shift"], "/", lazy.function(display_keybindings), desc="Print keyboard bindings"),
+    Key([], "XF86MonBrightnessDown",
+        lazy.spawn("brightnessctl set 5%-"),
+        lazy.function(lambda qtile: notify_brightness()),
+        desc="Lower Brightness by 5%"
+    ),
+    Key([], "XF86MonBrightnessUp",
+        lazy.spawn("brightnessctl set +5%"),
+        lazy.function(lambda qtile: notify_brightness()),
+        desc="Raise Brightness by 5%"
+    ),
+
+    # Media keys
+    Key([], "XF86AudioMute", lazy.spawn("amixer -q set Master toggle"), desc="Mute volume"),
+    Key([], "XF86AudioLowerVolume", lazy.spawn("amixer -q set Master 5%-"), desc="Lower volume"),
+    Key([], "XF86AudioRaiseVolume", lazy.spawn("amixer -q set Master 5%+"), desc="Raise volume"),
+    Key([], "XF86AudioMicMute", lazy.spawn("amixer -q set Capture toggle"), desc="Mute microphone"),
+
+    # screenshot on f11
+    Key([], "Print", lazy.spawn("/home/khai/.config/qtile/screenshot.sh"), desc="Take screenshot"),
 ]
 
 # Add key bindings to switch VTs in Wayland.
@@ -137,7 +154,7 @@ layouts = [
         border_normal="#000000",
         border_width=1,
         border_width_single=0,
-        margin=11,
+        margin=15,
     ),
     layout.TreeTab(
         active_bg=colors[7],
@@ -155,7 +172,7 @@ layouts = [
         padding_left=2,
         padding_x=6,
         padding_y=2,
-        panel_width=205,
+        panel_width=230,
         previous_on_rm=False,
         section_bottom=6,
         section_fg=colors[1],
@@ -174,8 +191,8 @@ layouts = [
 
 widget_defaults = dict(
     font="Hack Nerd Font",
-    fontsize=12,
-    padding=5,
+    fontsize=16,
+    padding=6,
     type='line',
     foreground=colors[1],
 )
@@ -247,20 +264,20 @@ screens = [
                     'Button3': lambda: open_google_calendar(),
                 }),
                 widget.Sep(foreground=colors[3]),
-                widget.TextBox(
-                    text='󰍜 ',
-                    foreground=colors[5],
-                    padding=5,
-                    mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('/home/khai/.config/rofi/rofi-power-menu.sh')}
-                ),
+                #widget.TextBox(
+                #    text='󰍜 ',
+                #    foreground=colors[5],
+                #    padding=5,
+                #    mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('/home/khai/.config/rofi/rofi-power-menu.sh')}
+                #),
 
                 # Battery widget, comment out on desktop
-                # widget.Battery(
-                #     format="{char} {percent:2.0%} {hour:d}:{min:02d}  ",
-                #     foreground=colors[7]
-                # ),
+                widget.Battery(
+                    format="{char} {percent:2.0%} {hour:d}:{min:02d}  ",
+                    foreground=colors[7]
+                ),
             ],
-            21,
+            30,
             border_width=[0, 0, 0, 0],
             background=colors[0],
         ),

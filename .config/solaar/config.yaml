@@ -6,11 +6,11 @@
     divert-crown, divert-gkeys, m-key-leds, mr-key-led, multiplatform, gesture2-gestures, gesture2-divert, gesture2-params, sidetone, equalizer, adc_power_management]
   _battery: 4100
   _modelId: B03700000000
-  _sensitive: {dpi: true}
+  _sensitive: {dpi: true, reprogrammable-keys: false}
   _unitId: C15E7E2C
   change-host: null
   divert-keys: {82: 0, 83: 0, 86: 0, 196: 0}
-  dpi: 250
+  dpi: 300
   hires-scroll-mode: false
   hires-smooth-invert: false
   hires-smooth-resolution: false
