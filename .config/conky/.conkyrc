@@ -62,7 +62,7 @@ ${color #aaaaaa}  Machine:$color ${execi 1000 whoami}@${nodename}  ${alignr}$
 ${color #aaaaaa}  OS:$color ${execi 1000 . /etc/os-release; echo $NAME $VERSION}
 ${color #aaaaaa}Kernel:$color $sysname $kernel $machine
 ${color #aaaaaa}CPU:$color ${execi 86400 cat /proc/cpuinfo | grep 'model name' | uniq | sed 's/model name\t: //'}
-${color #aaaaaa}GPU:$color ${execi 1000 nvidia-smi --query-gpu=gpu_name --format=csv,noheader,nounits}
+${if_existing /proc/driver/nvidia/version}${color #aaaaaa}GPU:$color ${execi 1000 nvidia-smi --query-gpu=gpu_name --format=csv,noheader,nounits}${endif}
 $hr
 ${color #93e0e3}RAM Usage:$color $mem/$memmax - ${color #93e0e3}$memperc% ${membar 4}$color
     ${color #aaaaaa}Name${alignr}PID   MEM%
@@ -71,35 +71,32 @@ ${color #93e0e3}RAM Usage:$color $mem/$memmax - ${color #93e0e3}$memperc% ${memb
     ${top_mem name 3} ${alignr}${top_mem pid 3} ${top_mem mem 3}
 
 ${color #72d5a3}  CPU Usage:$color $cpu% ${color #72d5a3}${cpubar 4}$color
-    ${color #aaaaaa}Core 1: ${if_match ${freq 1}<1000} ${endif}${freq 1} MHz        Temp: $color ${exec sensors|grep 'Core 0'|awk '{print $3}'}
-    ${if_match ${cpu cpu1}<10} ${endif}${cpu cpu1}%  ${color #aaaaaa}${cpubar cpu1}$color
-    ${color #aaaaaa}Core 2: ${if_match ${freq 2}<1000} ${endif}${freq 2} MHz        Temp: $color ${exec sensors|grep 'Core 1'|awk '{print $3}'}
-    ${if_match ${cpu cpu2}<10} ${endif}${cpu cpu2}%  ${color #aaaaaa}${cpubar cpu2}$color
-    ${color #aaaaaa}Core 3: ${if_match ${freq 3}<1000} ${endif}${freq 3} MHz
-    ${if_match ${cpu cpu3}<10} ${endif}${cpu cpu3}%  ${color #aaaaaa}${cpubar cpu3}$color
-    ${color #aaaaaa}Core 4: ${if_match ${freq 4}<1000} ${endif}${freq 4} MHz
-    ${if_match ${cpu cpu4}<10} ${endif}${cpu cpu4}%  ${color #aaaaaa}${cpubar cpu4}$color
-${color #aaaaaa}Processes:$color $processes  ${color #aaaaaa}Running:$color $running_processes
-
+    ${color #aaaaaa}Core 1: ${if_match ${freq 1}<1000} ${endif}${freq 1} MHz        Temp: $color ${exec sensors|grep -m 1 'Core 0'|awk '{print $3}'}
+    ${color #aaaaaa}Core 2: ${if_match ${freq 2}<1000} ${endif}${freq 2} MHz        Temp: $color ${exec sensors|grep -m 1 'Core 1'|awk '{print $3}'}
+    ${color #aaaaaa}Core 3: ${if_match ${freq 3}<1000} ${endif}${freq 3} MHz        Temp: $color ${exec sensors|grep -m 1 'Core 2'|awk '{print $3}'}
+    ${color #aaaaaa}Core 4: ${if_match ${freq 4}<1000} ${endif}${freq 4} MHz        Temp: $color ${exec sensors|grep -m 1 'Core 3'|awk '{print $3}'}
+    
+    ${color #aaaaaa}Processes:$color $processes  ${color #aaaaaa}Running:$color $running_processes
 ${color #ec93d3}󱚶  Networking ${hr 1}$color
-    ${color #aaaaaa}State:$color${alignr} ${if_existing /sys/class/net/enp4s0/operstate up}${color FFFFFF}ONLINE${else}${color red}OFFLINE${endif}$color
-    ${color #aaaaaa}ISP: $color${alignr} ${execi 6000 curl ipinfo.io/org}
-    ${color #aaaaaa}Local IP: $color${alignr} ${addr enp4s0}
-    ${color #aaaaaa}Public IP: $color${alignr} ${execi 600 wget http://ipinfo.io/ip -qO -}
+    ${color #aaaaaa}Connected to: $color${alignr} ${execi 1000 iwgetid -r}
+    ${color #aaaaaa}State:$color${alignr} ${if_existing /sys/class/net/wlan0/operstate up}${color FFFFFF}ONLINE${else}${color red}OFFLINE${endif}$color
+        ${color #aaaaaa}MAC Address: $color${alignr} ${execi 1000 cat /sys/class/net/wlan0/address}
+        ${color #aaaaaa}Local IP: $color${alignr} ${addr wlan0}
+        ${color #aaaaaa}Public IP: $color${alignr} ${execi 600 curl -s http://ipinfo.io/ip}
 
-    Signal Strength: $color${alignr} ${execi 5 iwconfig enp4s0 | awk '/Link Quality/{split($2,a,"-|/";print int((a[2]/a[3])*100)"%"}'}
+    Signal Strength: $color${alignr} ${execi 5 iwconfig wlan0 | awk '/Link Quality/{split($2,a,"-|/";print int((a[2]/a[3])*100)"%"}'}
         ${color #aaaaaa}Total connections: $alignr ${tcp_portmon 1 65535 count}
         ${color #aaaaaa}Ping to 192.168.1.1: $alignr ${texeci 15 output=$(ping -c 10 192.168.1.1); avg=$(printf "%0.1f" `echo $output | awk -F '/' 'END {print $5}'` | sed 's/,/./'); mdev=$(printf "%0.1f" `echo $output | awk -F '/' 'END {print $7}' | sed 's/ .*//'` | sed 's/,/./'); echo $avg ± $mdev ms}
         ${color #aaaaaa}Ping to 8.8.8.8: $alignr ${texeci 15 output=$(ping -c 10 8.8.8.8); avg=$(printf "%0.1f" `echo $output | awk -F '/' 'END {print $5}'` | sed 's/,/./'); mdev=$(printf "%0.1f" `echo $output | awk -F '/' 'END {print $7}' | sed 's/ .*//'` | sed 's/,/./'); echo $avg ± $mdev ms}
 
-    ${color #ec93d3} Down: ${downspeed enp4s0} / s ${alignr} ${color #ec93d3} Up: ${upspeed enp4s0} / s$color
-    ${color #aaaaaa}${downspeedgraph enp4s0 25,200 ec93d3 ec93d3} ${alignr}${upspeedgraph enp4s0 25,200 ec93d3 ec93d3}
-    Total: ${totaldown enp4s0} ${alignr}Total: ${totalup enp4s0}
+    ${color #ec93d3} Down: ${downspeed wlan0} / s ${alignr} ${color #ec93d3} Up: ${upspeed wlan0} / s$color
+    ${color #aaaaaa}${downspeedgraph wlan0 25,200 ec93d3 ec93d3} ${alignr}${upspeedgraph wlan0 25,200 ec93d3 ec93d3}
+    Total: ${totaldown wlan0} ${alignr}Total: ${totalup wlan0}
     #Inbound: ${tcp_portmon 1 32767 count} Outbound: ${tcp_portmon 32768 61000 count}
 ${voffset -10}
 ${color #dfaf8f}  File systems:
-    /    $color${fs_used /}/${fs_size /} ${color #dfaf8f}${fs_bar 6 /}
-    ${color #dfaf8f}Home $color${fs_used /home}/${fs_size /home} ${color #dfaf8f}${fs_bar 6 /home}$color
+    /    $color${fs_used /}/${fs_size /} - ${color #dfaf8f}${fs_used_perc /}% ${color #dfaf8f}${fs_bar 6 /}$color
+    ${color #dfaf8f}Home $color${fs_used /home}/${fs_size /home} - ${color #dfaf8f}${fs_used_perc /home}% ${fs_bar 6 /home}$color
 $hr
 ${color #aaaaaa}Name${alignr}PID   CPU%   MEM%
 ${top name 1} ${alignr}${top pid 1} ${top cpu 1} ${top mem 1}

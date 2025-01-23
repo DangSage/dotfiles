@@ -1,6 +1,6 @@
-# "Dalacritty" - My Qtile Rice 󰟪
+# "Dalacritty" - My Qtile Rice
 
-This is my own Arch Linux rice based on [kj_sh604's awesomeWM rice](https://github.com/kj-sh604/dotfiles). I have made some modifications to the original rice to suit my own needs and different use cases for Qtile. This repository contains the configuration files for the following programs:
+This is my own Arch Linux rice based on [kj_sh604's awesomeWM rice](https://github.com/kj-sh604/dotfiles). I have made some modifications to the original rice to suit my own needs and different use cases for Qtile. This repository contains but is not limited to:
 
 ## Dotfiles
 - `Qtile` (Window Manager)
@@ -15,6 +15,7 @@ This is my own Arch Linux rice based on [kj_sh604's awesomeWM rice](https://gith
 - `btop` (System Monitor)
 - `thunar` (File Manager)
 - `myxer` (Volume Control)
+- `conky` (System Monitor)
 
 and some basic daemons and services.
 
@@ -87,4 +88,4 @@ It's also worthy to note you WILL need uninstall the `vim` package from the offi
 
 There's different branches for this repository, where the `desktop` branch is the main most maintained one. All laptop-specific configurations are relatively the same with some performance tweaks and power management settings.
 
-Happy ricing! 󰟪
+Happy ricing!
