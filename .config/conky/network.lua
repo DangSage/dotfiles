@@ -1,4 +1,6 @@
 local interface = io.popen("ip route get 8.8.8.8 | awk '{print $5}'"):read("*a"):gsub("%s+", "")
+conky = conky or {}
+conky.text = conky.text or ""
 
 conky.text = conky.text .. [[
 ${color #ec93d3}󱚶  Networking ${hr 1}$color

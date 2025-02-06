@@ -25,4 +25,4 @@ text/x-makefile=alacritty.desktop;
 application/x-shellscript=alacritty.desktop;
 application/json=vim-alacritty.desktop;
 text/plain=vim-alacritty.desktop;alacritty.desktop;vim.desktop;
-
+text/x-tex=vim-alacritty.desktop;

@@ -3,7 +3,7 @@ ${color #aaaaaa}  Machine:$color ${execi 1000 whoami}@${nodename}  ${alignr}$
 ${color #aaaaaa}  OS:$color ${execi 1000 . /etc/os-release; echo $NAME $VERSION}
 ${color #aaaaaa}Kernel:$color $sysname $kernel $machine
 ${color #aaaaaa}CPU:$color ${execi 86400 cat /proc/cpuinfo | grep 'model name' | uniq | sed 's/model name\t: //'}
-${color #aaaaaa}GPU:$color ${execi 1000 nvidia-smi --query-gpu=gpu_name --format=csv,noheader,nounits}
+${if_existing /proc/driver/nvidia/version}${color #aaaaaa}GPU:$color ${execi 1000 nvidia-smi --query-gpu=gpu_name --format=csv,noheader,nounits}${endif}
 $hr
 ${color #93e0e3}RAM Usage:$color $mem/$memmax - ${color #93e0e3}$memperc% ${membar 4}$color
     ${color #aaaaaa}Name${alignr}PID   MEM%

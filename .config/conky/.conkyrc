@@ -63,3 +63,4 @@ conky.text = ""
 dofile("/home/khai/.config/conky/system.lua")
 dofile("/home/khai/.config/conky/cpu.lua")
 dofile("/home/khai/.config/conky/network.lua")
+dofile("/home/khai/.config/conky/storage.lua")
