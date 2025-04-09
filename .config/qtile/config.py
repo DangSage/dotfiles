@@ -1,6 +1,6 @@
 import gi
 import os
-import subprocess
+import subprocess 
 import datetime
 
 gi.require_version('Notify', '0.7')
@@ -88,8 +88,7 @@ keys = [
     *[EzKey(k, v[0], desc=v[1]) for k, v in keymap.items()],
     # Key([mod, "control"], "r", lazy.reload_config(), desc="Reload the config"),
     # Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
-
-    #Key([mod, "shift"], "/", lazy.function(display_keybindings), desc="Print keyboard bindings"),
+    # Key([mod, "shift"], "/", lazy.function(display_keybindings), desc="Print keyboard bindings"),
 ]
 
 # Add key bindings to switch VTs in Wayland.
@@ -199,11 +198,24 @@ screens = [
                     other_screen_border=colors[5],
                 ),
                 widget.Sep(foreground=colors[3]),
+                widget.Prompt(
+                    prompt='$ ',
+                    font='Hack Nerd Font',
+                    fontshadow=None,
+                    foreground=colors[1],
+                    background=colors[2],
+                    padding=0,
+                    cursor_color=colors[1],
+                    cursor_blink=True,
+                    cursor_blink_interval=0.5,
+                    cursor_blink_timeout=0.5,
+                    max_history_items=10,
+                ),
+                widget.Sep(foreground=colors[3]),
                 widget.WindowName(
-                    max_chars=0,
                     width=400,
                     scroll_fixed_width=True,
-                    foreground=colors[8],
+                    foreground=colors[8]
                 ),
                 widget.Spacer(),
                 widget.Net(
