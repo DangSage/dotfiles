@@ -3,3 +3,7 @@
 *.tmp
 *
 *__pycache__/
+.config/mpd/log
+.config/mpd/database
+.config/Thunar/accels.scm
+.config/dconf/user
