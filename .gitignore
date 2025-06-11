@@ -3,3 +3,6 @@
 *.tmp
 *
 *__pycache__/
+mpd/*
+!mpd/mpd.conf
+*log*
