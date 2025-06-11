@@ -216,6 +216,8 @@ screens = [
                     other_screen_border=colors[5],
                 ),
                 widget.Sep(foreground=colors[3]),
+                widget.Prompt(),
+                widget.Sep(foreground=colors[3]),
                 widget.WindowName(
                     max_chars=0,
                     width=400,
