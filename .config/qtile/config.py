@@ -30,6 +30,28 @@ def open_google_calendar():
     url = f"https://calendar.google.com/calendar/r/week/{today.year}/{today.month:02d}/{today.day:02d}"
     qtile.cmd_spawn(f'xdg-open {url}')
 
+def toggle_focus_floating():
+    '''Toggle focus between floating window and other windows in group'''
+
+    @lazy.function
+    def _toggle_focus_floating(qtile):
+        group = qtile.current_group
+        switch = 'non-float' if qtile.current_window.floating else 'float'
+        logger.debug(f'toggle_focus_floating: switch = {switch}\t current_window: {qtile.current_window}')
+        logger.debug(f'focus_history: {group.focus_history}')
+
+        for win in reversed(group.focus_history):
+            logger.debug(f'{win}: {win.floating}')
+            if switch=='float' and win.floating:
+                # win.focus(warp=False)
+                group.focus(win)
+                return
+            if switch=='non-float' and not win.floating:
+                # win.focus(warp=False)
+                group.focus(win)
+                return
+    return _toggle_focus_floating
+
 
 from libqtile.config import EzKey
 from libqtile.lazy import lazy
@@ -253,30 +275,26 @@ screens = [
                     padding=5,
                     mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('alacritty -e btop -p 2')}
                 ),
-
                 widget.Spacer(),
-                widget.Systray(
-                    padding=5,
-                    icon_size=20,
-                ),
-
+                widget.Systray(),
                 widget.Sep(foreground=colors[3]),
                 widget.Clock(format="%I:%M:%S %P %a %Y-%m-%d", mouse_callbacks={
                     'Button1': lambda: qtile.cmd_spawn('gsimplecal'),
                     'Button3': lambda: open_google_calendar(),
                 }),
                 widget.Sep(foreground=colors[3]),
-                #widget.TextBox(
-                #    text='󰍜 ',
-                #    foreground=colors[5],
-                #    padding=5,
-                #    mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('/home/khai/.config/rofi/rofi-power-menu.sh')}
-                #),
 
                 # Battery widget, comment out on desktop
                 widget.Battery(
-                    format="{char} {percent:2.0%} {hour:d}:{min:02d}  ",
+                    format="{char} {percent:2.0%} {hour:d}:{min:02d} ",
                     foreground=colors[7]
+                ),
+                widget.Sep(foreground=colors[3]),
+                widget.TextBox(
+                    text='󰍜',
+                    foreground=colors[5],
+                    padding=5,
+                    mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('/home/khai/.config/rofi/rofi-power-menu.sh')}
                 ),
             ],
             30,
