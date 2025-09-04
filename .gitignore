@@ -10,9 +10,8 @@ mpd/*
 .netrwhist
 
 # specific database files
-*mimeapps.list
-*user
-*gtkfilechooser.ini
-*database
-*state
-*accels.scm
+.config/dconf/user
+.config/gtk-2.0/gtkfilechooser.ini
+.config/mpd/database
+.config/mpd/state
+.config/Thunar/accels.scm
