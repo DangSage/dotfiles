@@ -8,3 +8,11 @@ mpd/*
 !mpd/mpd.conf
 *database*
 .netrwhist
+
+# specific database files
+*mimeapps.list
+*user
+*gtkfilechooser.ini
+*database
+*state
+*accels.scm
