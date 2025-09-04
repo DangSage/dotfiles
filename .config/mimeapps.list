@@ -9,6 +9,7 @@ application/octet-stream=userapp-tuxguitar-bin-2ZC7Y2.desktop
 application/x-blender=blender.desktop
 application/vnd.appimage=alacritty.desktop
 model/obj=blender.desktop
+application/vnd.sqlite3=userapp-alacritty -e vim-DTEHU2.desktop
 
 [Added Associations]
 inode/directory=alacritty.desktop;terminal-ranger.desktop;
@@ -24,5 +25,8 @@ image/jpeg=gimp.desktop;
 text/x-makefile=alacritty.desktop;
 application/x-shellscript=alacritty.desktop;
 application/json=vim-alacritty.desktop;
-text/plain=vim-alacritty.desktop;alacritty.desktop;vim.desktop;
+text/plain=gvim.desktop;vim-alacritty.desktop;alacritty.desktop;vim.desktop;
 text/x-tex=vim-alacritty.desktop;
+application/vnd.sqlite3=userapp-alacritty -e vim-DTEHU2.desktop;
+image/svg+xml=inkscape.desktop;
+audio/mpeg=audacity.desktop;
