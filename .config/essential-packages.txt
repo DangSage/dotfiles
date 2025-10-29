@@ -51,6 +51,7 @@ npm
 base-devel
 ripgrep
 fd
+tree-sitter-cli
 
 # Clipboard
 xclip

@@ -18,6 +18,7 @@ vim.cmd [[
   Plug 'lewis6991/gitsigns.nvim'
   Plug 'TimUntersberger/neogit'
   Plug 'sindrets/diffview.nvim'
+  Plug 'nvim-tree/nvim-web-devicons'
 
   " Plug 'LunarWatcher/auto-pairs'
   call plug#end()
