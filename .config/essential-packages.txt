@@ -1,0 +1,87 @@
+# Core Window Manager
+qtile
+qtile-extras
+
+# Display Server
+xorg-server
+xorg-xinit
+xorg-xev
+xorg-xinput
+
+# Terminal
+wezterm
+
+# System Monitors & Utilities
+conky
+dunst
+picom
+ranger
+brightnessctl
+playerctl
+
+# Audio
+pipewire
+pipewire-alsa
+pipewire-pulse
+pipewire-jack
+gst-plugin-pipewire
+pavucontrol
+
+# Network
+networkmanager
+network-manager-applet
+blueman
+
+# Fonts
+ttf-cascadia-code-nerd
+ttf-cascadia-mono-nerd
+adobe-source-code-pro-fonts
+noto-fonts
+noto-fonts-emoji
+noto-fonts-cjk
+noto-fonts-extra
+
+# Development
+neovim
+git
+python
+python-pip
+nodejs
+npm
+base-devel
+ripgrep
+fd
+
+# Clipboard
+xclip
+xsel
+
+# Archives
+unzip
+unrar
+p7zip
+
+# Image/PDF/Media
+feh
+zathura
+zathura-pdf-poppler
+mpv
+
+# GUI Libraries
+gtk3
+gtk4
+qt5-base
+qt6-base
+
+# Logitech
+solaar
+
+# Power Management
+tlp
+acpi
+
+# Hardware Support (Intel/Framework 13)
+mesa
+vulkan-intel
+intel-media-driver
+intel-ucode
