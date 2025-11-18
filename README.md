@@ -1,91 +1,137 @@
-# "Dalacritty" - My Qtile Rice
+# Framework 13 Arch Linux Configuration
 
-This is my own Arch Linux rice based on [kj_sh604's awesomeWM rice](https://github.com/kj-sh604/dotfiles). I have made some modifications to the original rice to suit my own needs and different use cases for Qtile. This repository contains but is not limited to:
+My Arch Linux rice configured for the Framework 13 laptop (12th Gen Intel i7-1260P). Based on [kj_sh604's awesomeWM rice](https://github.com/kj-sh604/dotfiles) with extensive modifications for Qtile and Framework 13 optimizations.
 
-## Dotfiles
-- `Qtile` (Window Manager)
-- `dunst` (Notification Daemon)
-- `picom` (Compositor)
-- `rofi` (Application Launcher)
-- `alacritty` (Terminal Emulator)
-- `vim` (Text Editor)
-- `gtk` (Theme)
-- `volumeicon` (Volume Control)
-- `ranger` (File Manager)
-- `btop` (System Monitor)
-- `thunar` (File Manager)
-- `myxer` (Volume Control)
-- `conky` (System Monitor)
+## Hardware
+- **Laptop**: Framework 13
+- **CPU**: 12th Gen Intel Core i7-1260P (12 cores)
+- **GPU**: Intel Iris Xe Graphics (Alder Lake-P GT2)
+- **Kernel**: Linux 6.17.7-arch1-1
 
-and some basic daemons and services.
+## Core Components
+
+### Window Manager & Desktop
+- **Qtile** - Tiling window manager with custom Python configuration
+- **Rofi** - Application launcher, power menu, and keybind viewer
+- **Picom** - Compositor with transparency effects
+- **Dunst** - Notification daemon
+- **Conky** - System monitor overlay
+- **Ly** - TUI display manager
+
+### Terminal & Shell
+- **Wezterm** - Primary terminal emulator
+- **Bash** - Shell with custom configuration
+- **FZF** - Fuzzy finder with `fd` backend and image preview
+  - Custom color scheme matching Qtile theme
+  - Image preview using `chafa` with sixel support
+  - Code preview using `bat`
+  - Custom `img()` function for browsing images
+
+### Editor
+- **Neovim** - Primary text editor
+  - LSP support with CoC
+  - Telescope fuzzy finder
+  - Git integration (Neogit, Fugitive, GitSigns)
+  - Tree-sitter syntax highlighting
+  - File explorer with nvim-tree
+
+### File Management
+- **Thunar** - GUI file manager
+- **Ranger** - TUI file manager with image preview
+- **Udiskie** - Automounting with tray icon
+
+### Audio & Media
+- **Pipewire** - Modern audio server (replaces PulseAudio)
+  - ALSA, JACK, and PulseAudio compatibility layers
+- **MPD** + **mpdris2** - Music player daemon with MPRIS2 support
+- **Spotify Player** - TUI Spotify client
+- **Pasystray** - Volume control tray applet
+- **Playerctl** - Media player controller
+
+### System Utilities
+- **Brightnessctl** - Screen brightness control (integrated in Qtile)
+- **Powertop** - Power management and monitoring
+- **Btop** / **Bottom** - System resource monitors
+- **Fastfetch** - System information display
+- **NetworkManager** - Network management with nm-applet
+- **Blueman** - Bluetooth management
+
+## Configuration Highlights
+
+### Shell Aliases (`~/.bashrc:10-11`)
+```bash
+alias vim='nvim'
+alias vi='nvim'
+```
+
+### FZF Integration (`~/.bashrc:14-63`)
+- Configured with custom color scheme matching Qtile
+- Uses `fd` for fast file searching
+- Image preview with `chafa` (sixel output)
+- Code syntax highlighting with `bat`
+- Directory tree preview
+- Custom `img()` function for image browsing with xdg-open integration
+
+### MIME Type Associations (`~/.config/mimeapps.list`)
+- **Text files** → Neovim
+- **Directories** → Wezterm (terminal file browser)
+- **Archives** → Xarchiver
+- **Web content** → Thorium Browser
+- **Empty files** → Neovim
+
+### Qtile Configuration
+
+**Custom Scripts** (`.config/qtile/`):
+- `rofi_app_launcher.sh` - Application launcher
+- `rofi_power_menu.sh` - Power/session menu
+- `rofi_keybinds.sh` - Interactive keybinding reference
+- `generate_colors.py` - Dynamic color scheme generation
+- `generate_keybinds_list.py` - Keybinding documentation
+- `screenshot.sh` - Screenshot utility
+
+**Autostart** (`~/.config/qtile/autostart.sh:1-22`):
+- Sets default audio volume to 60%
+- Configures touchpad click method
+- Starts system tray applications (Blueman, Pasystray, nm-applet)
+- Launches background services (Conky, MPD, Dunst, Picom)
+- Opens Wezterm terminal on startup
+
+**Statusbar Scripts** (`~/.local/bin/statusbar/`):
+- `sb-battery` - Battery status (Framework 13 specific)
+- `sb-clock` - Date/time display
+- `sb-cpu` - CPU usage monitor
+- `sb-memory` - RAM usage
+- `sb-disk` - Disk usage
+- `sb-network` - Network status
 
 ## Installation
 
-### Additional Packages
-
-I have included a list of packages that I use on my system. I've kept the lists within the `.config/.PACKS/` directory. You can install all the packages w/ the simple bash script here:
-
-```sh
-while read -r line; do
-    sudo pacman -S $line
-done < .config/.PACKS/pacman.txt
-
-while read -r line; do
-    sudo pikaur -S $line   # or any other AUR helper
-done < .config/.PACKS/aur.txt
-```
-
-
-### Required Daemons
-
-The following daemons will need to be set up:
-
-- `bluez` (Bluetooth)
-- `networkmanager` (Networking)
-- `solaar` (Logitech Unifying Receiver)
-- `udiskie` (Automounting)
-
-To enable these daemons, run the following commands:
-
-```sh
+### Required System Services
+```bash
 sudo systemctl enable bluetooth
 sudo systemctl enable NetworkManager
-sudo systemctl enable solaar
 sudo systemctl enable udiskie
 ```
 
-### Vim Configuration for Arch Linux
+### Key Dependencies
+- `fzf` - Fuzzy finder
+- `fd` - Fast file finder (used by FZF)
+- `bat` - Syntax-highlighted file viewer
+- `chafa` - Terminal image viewer with sixel support
+- `rofi` - Application launcher
+- `brightnessctl` - Brightness control
+- `pipewire` - Audio server
 
-By default, Vim on Arch Linux is not compiled with Python3 or clipboard support. To enable these features, you will need to recompile Vim with the following flags:
+## Branch Structure
+- **framework13** - Current branch (Framework 13 specific config)
+- **main** - Base configuration
+- Other branches for different hardware setups
 
-```sh
-git clone git@github.com:vim/vim.git
-cd vim
-./configure \
-    --prefix=/usr \
-    --with-features=huge \
-    --enable-multibyte \
-    --enable-rubyinterp \
-    --enable-python3interp \
-    --enable-perlinterp \
-    --enable-luainterp \
-    --enable-gui=auto \
-    --enable-gtk2-check \
-    --enable-gnome-check \
-    --with-x \
-    --enable-cscope \
-    --prefix=/usr
-make
-sudo make install
-```
-
-It's also worthy to note you WILL need uninstall the `vim` package from the official repositories before compiling Vim from source. This WILL cause conflicts in the package manager.
-
-<!-- line here -->
-**Note:** You may need to install the `python-pip` package to install the `neovim` package.
-
-### Branches
-
-There's different branches for this repository, where the `desktop` branch is the main most maintained one. All laptop-specific configurations are relatively the same with some performance tweaks and power management settings.
+## Framework 13 Optimizations
+- Intel-specific drivers and microcode
+- Battery monitoring in statusbar
+- Brightness control integrated in Qtile keybindings
+- Power management with powertop
+- Touchpad configuration in autostart
 
 Happy ricing!
