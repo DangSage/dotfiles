@@ -1,6 +1,6 @@
 import gi
 import os
-import subprocess 
+import subprocess
 import datetime
 
 gi.require_version('Notify', '0.7')
@@ -62,14 +62,14 @@ keymap = {
     'M-C-8': (lazy.layout.size(800), "Set size to 800"),
     'M-n': (lazy.layout.reset_size(), "Reset size"),
     'A-<Tab>': (lazy.layout.next(), "Move to next window"),
-    'M-<return>': (lazy.spawn(terminal), "Launch terminal"),
+    'M-<grave>': (lazy.spawn(terminal), "Launch terminal"),
     'M-q': (lazy.window.kill(), "Kill focused window"),
     'M-<Tab>': (lazy.next_layout(), "Toggle between layouts"),
     'M-f': (lazy.window.toggle_floating(), "Toggle floating mode"),
 
     # Application launchers
     'A-<Space>': (lazy.spawn("rofi -show drun"), "Launch rofi"),
-    'M-w': (lazy.spawn("firefox"), "Launch firefox"),
+    'M-w': (lazy.spawn("thorium-browser"), "Launch thorium-browser"),
     '<F12>': (lazy.spawn("/home/khai/.config/qtile/screenshot.sh"), "Take screenshot"),
 
     # System controls
@@ -248,21 +248,16 @@ screens = [
                 ),
 
                 widget.Spacer(),
-                widget.Systray(
-                    padding=5,
+                widget.Systray(  # Use the standard Qtile systray
                     icon_size=20,
                 ),
-
-                widget.Sep(foreground=colors[3]),
                 widget.Clock(format="%I:%M:%S %P %a %Y-%m-%d", mouse_callbacks={
                     'Button1': lambda: qtile.cmd_spawn('gsimplecal'),
                     'Button3': lambda: open_google_calendar(),
                 }),
-                widget.Sep(foreground=colors[3]),
                 widget.TextBox(
-                    text='󰍜 ',
+                    text='$',
                     foreground=colors[5],
-                    padding=5,
                     mouse_callbacks={'Button1': lambda: qtile.cmd_spawn('/home/khai/.config/rofi/rofi-power-menu.sh')}
                 ),
 
