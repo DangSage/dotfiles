@@ -18,6 +18,7 @@ picom
 ranger
 brightnessctl
 playerctl
+redshift
 
 # Audio
 pipewire

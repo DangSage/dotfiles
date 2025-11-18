@@ -291,10 +291,14 @@ handle_mime() {
 
         ## Text
         text/* | */xml)
-            ## Syntax highlight
+            ## Syntax highlight with bat (prioritized)
             if [[ "$( stat --printf='%s' -- "${FILE_PATH}" )" -gt "${HIGHLIGHT_SIZE_MAX}" ]]; then
                 exit 2
             fi
+            ## Use bat for syntax highlighting (best option)
+            bat --color=always --style=numbers,changes --line-range=:500 \
+                -- "${FILE_PATH}" && exit 5
+            ## Fallback to other highlighters if bat fails
             if [[ "$( tput colors )" -ge 256 ]]; then
                 local pygmentize_format='terminal256'
                 local highlight_format='xterm256'
@@ -305,8 +309,6 @@ handle_mime() {
             env HIGHLIGHT_OPTIONS="${HIGHLIGHT_OPTIONS}" highlight \
                 --out-format="${highlight_format}" \
                 --force -- "${FILE_PATH}" && exit 5
-            env COLORTERM=8bit bat --color=always --style="plain" \
-                -- "${FILE_PATH}" && exit 5
             pygmentize -f "${pygmentize_format}" -O "style=${PYGMENTIZE_STYLE}"\
                 -- "${FILE_PATH}" && exit 5
             exit 2;;

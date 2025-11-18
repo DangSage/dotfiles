@@ -1,1 +1,13 @@
-@theme "/home/khai/.config/rofi/dalacrofi.rasi"
+/** Terminal-style minimalist config **/
+
+configuration {
+  show-icons: false;
+  display-drun: ">";
+  display-window: ">";
+  display-combi: ">";
+  font: "Hack Nerd Font Mono 12";
+  drun-display-format: "{name}";
+  disable-history: false;
+  sidebar-mode: false;
+}
+@theme "themes/sidetab-nord.rasi"

@@ -15,8 +15,7 @@ mpDris2 &
 playerctl daemon &
 
 blueman-applet &
-volumeicon &
+pasystray --notify=sink --volume-max=150 --volume-inc=5 &
 nm-applet &
 
-# Run vim in a floating window
-alacritty --class floatingVim -e vim &
+wezterm &

@@ -1,0 +1,58 @@
+/* GTK Custom Colors - Generated from dalacritty theme */
+@define-color theme_bg_color #303030;
+@define-color theme_fg_color #dcdcdc;
+@define-color theme_base_color #202020;
+@define-color theme_text_color #dcdcdc;
+@define-color theme_selected_bg_color #9ab8d7;
+@define-color theme_selected_fg_color #ffffff;
+@define-color insensitive_bg_color #555555;
+@define-color insensitive_fg_color #808080;
+@define-color borders #808080;
+@define-color warning_color #dfaf8f;
+@define-color error_color #D67979;
+@define-color success_color #72D5A3;
+
+* {
+    background-color: #303030;
+    color: #dcdcdc;
+}
+
+window {
+    background-color: #303030;
+}
+
+.titlebar {
+    background-color: #202020;
+    color: #dcdcdc;
+}
+
+button {
+    background-color: #6a6a6a;
+    color: #dcdcdc;
+    border: 1px solid #808080;
+}
+
+button:hover {
+    background-color: #9ab8d7;
+    color: #ffffff;
+}
+
+entry {
+    background-color: #202020;
+    color: #dcdcdc;
+    border: 1px solid #808080;
+}
+
+entry:focus {
+    border-color: #9ab8d7;
+}
+
+.view {
+    background-color: #303030;
+    color: #dcdcdc;
+}
+
+.view:selected {
+    background-color: #9ab8d7;
+    color: #ffffff;
+}

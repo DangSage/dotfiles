@@ -1,5 +1,6 @@
 [Alsa]
 card=default
+logarithmic_scale=true
 
 [Notification]
 show_notification=true
@@ -7,9 +8,10 @@ notification_type=1
 
 [StatusIcon]
 stepsize=10
-onclick=myxer
+onclick=pavucontrol
 theme=Default
 use_panel_specific_icons=true
+reverse_scroll_direction=false
 lmb_slider=true
 mmb_mute=false
 use_horizontal_slider=false
@@ -17,9 +19,9 @@ show_sound_level=true
 use_transparent_background=false
 
 [Hotkeys]
-up_enabled=true
-down_enabled=true
-mute_enabled=true
-up=XF86AudioRaiseVolume
-down=XF86AudioLowerVolume
-mute=XF86AudioMute
+up_enabled=false
+down_enabled=false
+mute_enabled=false
+up=AudioRaiseVolume
+down=AudioLowerVolume
+mute=AudioMute

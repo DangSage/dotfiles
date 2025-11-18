@@ -1,21 +1,23 @@
-local interface = io.popen("ip route get 8.8.8.8 | awk '{print $5}'"):read("*a"):gsub("%s+", "")
+-- Detect active network interface
+local interface = io.popen("ip route get 8.8.8.8 2>/dev/null | awk '{print $5; exit}'"):read("*a"):gsub("%s+", "")
+if interface == "" then
+    interface = "wlan0"  -- fallback to default wireless interface
+end
+
 conky = conky or {}
 conky.text = conky.text or ""
 
 conky.text = conky.text .. [[
 ${color #ec93d3}󱚶  Networking ${hr 1}$color
-    ${color #aaaaaa}Interface: $color${alignr} ]] .. interface .. [[${if_match "${exec cat /sys/class/net/]] .. interface .. [[/operstate}" == "up"} ${color FFFFFF}ONLINE${else}${color red}OFFLINE${endif}$color
-    ${color #aaaaaa}Connected to: $color${alignr} ${execi 5 iwgetid -r}
-        ${color #aaaaaa}MAC Address: $color${alignr} ${execi 5 cat /sys/class/net/]] .. interface .. [[/address}
-        ${color #aaaaaa}Local IP: $color${alignr} ${addr ]] .. interface .. [[}
-        ${color #aaaaaa}Public IP: $color${alignr} ${execi 600 wget http://ipinfo.io/ip -qO -}
+    ${color #aaaaaa}Interface: $color]] .. interface .. [[ ${if_up ]] .. interface .. [[}${color FFFFFF}ONLINE${else}${color red}OFFLINE${endif}$color
+    ${if_up ]] .. interface .. [[}${color #aaaaaa}Connected to: $color${alignr}${wireless_essid ]] .. interface .. [[}
+        ${color #aaaaaa}Signal Strength: $color${alignr}${wireless_link_qual_perc ]] .. interface .. [[}%
+        ${color #aaaaaa}MAC Address: $color${alignr}${execi 60 cat /sys/class/net/]] .. interface .. [[/address 2>/dev/null || echo "N/A"}
+        ${color #aaaaaa}Local IP: $color${alignr}${addr ]] .. interface .. [[}
+        ${color #aaaaaa}Public IP: $color${alignr}${execi 600 wget -qO- http://ipinfo.io/ip 2>/dev/null || echo "N/A"}
 
-    Signal Strength: $color${alignr} ${execi 5 iwconfig ]] .. interface .. [[ | awk '/Link Quality/{split($2,a,"-|/");print int((a[2]/a[3])*100)"%"}'}$alignr ${tcp_portmon 1 65535 count} Connections
-        ${color #aaaaaa}Ping to 192.168.1.1: $alignr ${texeci 15 output=$(ping -c 10 192.168.1.1); avg=$(printf "%0.1f" `echo $output | awk -F '/' 'END {print $5}'` | sed 's/,/./'); mdev=$(printf "%0.1f" `echo $output | awk -F '/' 'END {print $7}' | sed 's/ .*//'` | sed 's/,/./'); echo $avg ± $mdev ms}
-        ${color #aaaaaa}Ping to 8.8.8.8: $alignr ${texeci 15 output=$(ping -c 10 8.8.8.8); avg=$(printf "%0.1f" `echo $output | awk -F '/' 'END {print $5}'` | sed 's/,/./'); mdev=$(printf "%0.1f" `echo $output | awk -F '/' 'END {print $7}' | sed 's/ .*//'` | sed 's/,/./'); echo $avg ± $mdev ms}
-
-    ${color #ec93d3} Down: ${downspeed ]] .. interface .. [[} / s ${alignr} ${color #ec93d3} Up: ${upspeed ]] .. interface .. [[} / s$color
-    ${color #aaaaaa}${downspeedgraph ]] .. interface .. [[ 25,200 ff00ff ff00ff} ${alignr}${upspeedgraph ]] .. interface .. [[ 25,200 ff00ff ff00ff}
-    ${color #aaaaaa}Inbound Packets: ${tcp_portmon 1 65535 count} ${alignr} Outbound Packets: ${tcp_portmon 1 65535 count}
+    ${color #ec93d3} Down: ${downspeed ]] .. interface .. [[}/s ${alignr} ${color #ec93d3} Up: ${upspeed ]] .. interface .. [[}/s$color
+    ${color #aaaaaa}${downspeedgraph ]] .. interface .. [[ 25,200 ec93d3 ec93d3} ${alignr}${upspeedgraph ]] .. interface .. [[ 25,200 ec93d3 ec93d3}
+    ${color #aaaaaa}Total Down: ${totaldown ]] .. interface .. [[} ${alignr}Total Up: ${totalup ]] .. interface .. [[}${endif}
 
 ]]
