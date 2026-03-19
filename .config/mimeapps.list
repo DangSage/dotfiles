@@ -15,6 +15,8 @@ x-scheme-handler/http=thorium-browser.desktop
 x-scheme-handler/https=thorium-browser.desktop
 x-scheme-handler/about=thorium-browser.desktop
 x-scheme-handler/unknown=thorium-browser.desktop
+application/pdf=thorium-browser.desktop
+x-scheme-handler/webcal=thorium-browser.desktop
 
 [Added Associations]
 inode/directory=org.wezfurlong.wezterm.desktop;
@@ -34,4 +36,5 @@ text/plain=nvim.desktop;vim.desktop;
 text/x-tex=nvim.desktop;
 application/vnd.sqlite3=nvim.desktop;
 image/svg+xml=inkscape.desktop;
-audio/mpeg=audacity.desktop;
+audio/mpeg=mpv.desktop;audacity.desktop;
+image/webp=gimp.desktop;

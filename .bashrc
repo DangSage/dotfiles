@@ -11,7 +11,11 @@ alias vim='nvim'
 alias vi='nvim'
 PS1='[\u@\h \W]\$ '
 
-eval "$(fzf --bash)"
+# Lazy-load fzf keybindings
+_fzf_setup() {
+  eval "$(fzf --bash)"
+  unset -f _fzf_setup
+}
 
 # FZF Configuration
 export FZF_DEFAULT_OPTS="
@@ -32,7 +36,6 @@ if command -v fd &> /dev/null; then
   export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 fi
 
-# FZF command options with image preview support
 export FZF_CTRL_T_OPTS="
   --preview 'if file -b --mime-type {} | grep -q \"^image/\"; then chafa -f sixel -s \${FZF_PREVIEW_COLUMNS}x\${FZF_PREVIEW_LINES} --work=9 --preprocess=off {}; else bat --color=always --style=numbers --line-range=:500 {} 2> /dev/null || cat {} 2> /dev/null || tree -C {} 2> /dev/null; fi'
   --preview-window right:50%:wrap
@@ -48,7 +51,12 @@ export FZF_ALT_C_OPTS="
   --preview 'tree -C {} | head -200'
   --preview-window right:50%
 "
+source /usr/share/fzf/key-bindings.bash
 
+# Add local bin to PATH for uv-installed tools
+export PATH="$HOME/.local/bin:$PATH"
+# Source secure environment variables
+[ -f "$HOME/.env" ] && source "$HOME/.env"
 export TERMINAL=wezterm
 export GDK_SCALE=1
 export GDK_DPI_SCALE=1.0

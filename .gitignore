@@ -14,3 +14,5 @@ mpd/*
 .config/mpd/database
 .config/mpd/state
 .config/Thunar/accels.scm
+.aider*
+.env
