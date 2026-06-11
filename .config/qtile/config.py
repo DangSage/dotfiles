@@ -1,9 +1,6 @@
-import gi
 import os
 import subprocess
 import datetime
-
-gi.require_version("Notify", "0.7")
 
 from libqtile import qtile, hook
 from libqtile.config import Click, Drag, Group, Key, Match, Screen, ScratchPad, DropDown
@@ -12,9 +9,12 @@ from libqtile.utils import guess_terminal
 from libqtile import bar, layout
 from qtile_extras import widget
 from mycolors import colors
+import logging
+
+logger = logging.getLogger(__name__)
 
 mod = "mod4"
-terminal = "wezterm"
+terminal = guess_terminal() or "wezterm"
 
 
 @hook.subscribe.startup_once
@@ -23,16 +23,15 @@ def autostart():
     subprocess.Popen([home + "/.config/qtile/autostart.sh"])
 
 
+@hook.subscribe.screen_change
+def screen_change(event):
+    """Trigger autorandr when displays are connected/disconnected"""
+    subprocess.Popen(["autorandr", "--change"])
+
+
 @hook.subscribe.client_focus
 def bring_floating_to_front(window):
     """Ensure floating windows always stay on top when focused"""
-    if window.floating:
-        window.bring_to_front()
-
-
-@hook.subscribe.client_new
-def float_to_front(window):
-    """Bring new floating windows to front immediately"""
     if window.floating:
         window.bring_to_front()
 
@@ -45,18 +44,6 @@ def on_float_change():
         window.bring_to_front()
 
 
-@hook.subscribe.resume
-def restart_on_resume():
-    """Restart compositor and refresh display after waking from sleep"""
-    import time
-
-    time.sleep(1)  # Give the system a moment to stabilize
-    subprocess.Popen(["killall", "picom"])
-    time.sleep(0.5)
-    subprocess.Popen(["picom", "-b"])
-    qtile.reload_config()  # Reload to refresh wallpaper
-
-
 def toggle_focus_floating():
     """Toggle focus between floating window and other windows in group"""
 
@@ -64,13 +51,8 @@ def toggle_focus_floating():
     def _toggle_focus_floating(qtile):
         group = qtile.current_group
         switch = "non-float" if qtile.current_window.floating else "float"
-        logger.debug(
-            f"toggle_focus_floating: switch = {switch}\t current_window: {qtile.current_window}"
-        )
-        logger.debug(f"focus_history: {group.focus_history}")
 
         for win in reversed(group.focus_history):
-            logger.debug(f"{win}: {win.floating}")
             if switch == "float" and win.floating:
                 group.focus(win)
                 return
@@ -123,7 +105,7 @@ def change_brightness(direction):
                     "1000",
                 ]
             )
-        except:
+        except (subprocess.CalledProcessError, ValueError, FileNotFoundError):
             pass
 
     return _change
@@ -141,7 +123,7 @@ def toggle_redshift():
             try:
                 with open(state_file, "r") as f:
                     current_temp = int(f.read().strip())
-            except:
+            except (FileNotFoundError, ValueError, IOError):
                 current_temp = 6500
 
             # Toggle between 3500K and 6500K
@@ -174,8 +156,28 @@ def toggle_redshift():
                     "2000",
                 ]
             )
-        except:
+        except (subprocess.CalledProcessError, FileNotFoundError, IOError):
             pass
+
+    return _toggle
+
+
+def toggle_workspace_fullscreen():
+    """Toggle fullscreen for all windows in current workspace"""
+
+    @lazy.function
+    def _toggle(qtile):
+        group = qtile.current_group
+        if not group.windows:
+            return
+
+        logger.debug(
+            f"Toggling fullscreen for {len(group.windows)} windows in group {group.name}"
+        )
+
+        for window in group.windows:
+            if not window.minimized:
+                window.toggle_fullscreen()
 
     return _toggle
 
@@ -264,6 +266,122 @@ def pull_from_scratchpad(qtile):
 
 
 ############################################################################
+# MULTI-SCREEN WINDOW CYCLING
+############################################################################
+
+_window_cycle_state = {"index": 0, "windows": []}
+
+
+@lazy.function
+def cycle_all_windows(qtile):
+    """Cycle forward through all visible windows across all screens.
+
+    Windows are collected from each screen's current group, sorted by screen index,
+    then cycled sequentially. When switching to a window on another screen,
+    the screen's group is set to display the target window's group before focusing.
+    """
+    all_windows = []
+    sorted_screens = sorted(qtile.screens, key=lambda s: s.index)
+
+    for screen in sorted_screens:
+        if screen.group:
+            visible_windows = [w for w in screen.group.windows if not w.minimized]
+            all_windows.extend(visible_windows)
+
+    if not all_windows:
+        return
+
+    if all_windows != _window_cycle_state["windows"]:
+        current_window = qtile.current_window
+        if current_window in all_windows:
+            _window_cycle_state["index"] = all_windows.index(current_window)
+        else:
+            _window_cycle_state["index"] = 0
+        _window_cycle_state["windows"] = all_windows
+
+    _window_cycle_state["index"] = (_window_cycle_state["index"] + 1) % len(all_windows)
+    next_window = all_windows[_window_cycle_state["index"]]
+
+    target_screen = next_window.group.screen
+    if target_screen:
+        target_screen.set_group(next_window.group)
+        qtile.focus_screen(target_screen.index)
+
+    if not next_window.floating and next_window.group:
+        next_window.group.focus(next_window)
+    else:
+        next_window.bring_to_front()
+        next_window.focus(warp=False)
+
+
+@lazy.function
+def cycle_all_windows_reverse(qtile):
+    """Cycle backward through all visible windows across all screens.
+
+    Same as cycle_all_windows but iterates in reverse order.
+    """
+    all_windows = []
+    sorted_screens = sorted(qtile.screens, key=lambda s: s.index)
+
+    for screen in sorted_screens:
+        if screen.group:
+            visible_windows = [w for w in screen.group.windows if not w.minimized]
+            all_windows.extend(visible_windows)
+
+    if not all_windows:
+        return
+
+    if all_windows != _window_cycle_state["windows"]:
+        current_window = qtile.current_window
+        if current_window in all_windows:
+            _window_cycle_state["index"] = all_windows.index(current_window)
+        else:
+            _window_cycle_state["index"] = 0
+        _window_cycle_state["windows"] = all_windows
+
+    _window_cycle_state["index"] = (_window_cycle_state["index"] - 1) % len(all_windows)
+    next_window = all_windows[_window_cycle_state["index"]]
+
+    target_screen = next_window.group.screen
+    if target_screen:
+        target_screen.set_group(next_window.group)
+        qtile.focus_screen(target_screen.index)
+
+    if not next_window.floating and next_window.group:
+        next_window.group.focus(next_window)
+    else:
+        next_window.bring_to_front()
+        next_window.focus(warp=False)
+
+
+############################################################################
+# SCREEN-AWARE GROUP SWITCHING
+############################################################################
+
+
+def switch_to_group_on_screen(group_name, screen_index=None):
+    """Switch to a group on a specific screen without affecting other screens"""
+
+    @lazy.function
+    def _switch(qtile):
+        target_screen = (
+            qtile.screens[screen_index]
+            if screen_index is not None
+            else qtile.current_screen
+        )
+        target_group = qtile.groups_map[group_name]
+
+        # Set the group on the target screen
+        # This will not affect what's showing on other screens
+        target_screen.set_group(target_group)
+
+        # Focus the screen
+        qtile.focus_screen(target_screen.index)
+
+    return _switch
+
+
+############################################################################
 # KEYBINDINGS
 ############################################################################
 
@@ -284,22 +402,22 @@ keymap = {
     "M-a": (lazy.layout.grow(), "Grow monad"),
     "M-x": (lazy.layout.shrink(), "Shrink monad"),
     "M-n": (lazy.layout.normalize(), "Reset size"),
+    "M-S-f": (lazy.layout.flip(), "Flip Column"),
     "M-S-n": (lazy.layout.reset(), "Reset layout"),
-    "A-<Tab>": (lazy.layout.next(), "Move to next window"),
-    "A-S-<Tab>": (lazy.layout.previous(), "Move to previous window"),
+    "A-<Tab>": (cycle_all_windows, "Cycle to next window across all screens"),
+    "A-S-<Tab>": (
+        cycle_all_windows_reverse,
+        "Cycle to previous window across all screens",
+    ),
     "M-<grave>": (lazy.spawn(terminal), "Launch terminal"),
     "M-q": (lazy.window.kill(), "Kill focused window"),
     "M-f": (lazy.next_layout(), "Toggle between layouts"),
-    "M-S-f": (lazy.layout.flip(), "Flip Monad"),
     "M-t": (lazy.window.toggle_floating(), "Toggle floating mode"),
-    #"M-f": (lazy.window.toggle_fullscreen(), "Toggle fullscreen mode"),
-    # Application launchers - Rofi based
-    "A-<Space>": (
-        lazy.spawn("/home/khai/.config/qtile/rofi_app_launcher.sh"),
-        "App launcher",
-    ),
+    # "M-f": (
+    #    toggle_workspace_fullscreen(),
+    #    "Toggle fullscreen for all windows in workspace",
+    # ),
     "M-w": (lazy.spawn("thorium-browser"), "Launch thorium-browser"),
-    # System controls - Rofi based power menu
     "M-<Escape>": (
         lazy.spawn("/home/khai/.config/qtile/rofi_power_menu.sh"),
         "Power menu",
@@ -312,62 +430,48 @@ keymap = {
     "M-S-p": (send_to_scratchpad, "Send window to scratchpad"),
     "M-C-p": (pull_from_scratchpad, "Pull window from scratchpad"),
     "<F9>": (toggle_redshift(), "Toggle night light (redshift)"),
-    # Rofi Keybindings viewer (large window with green borders)
-    "<F12>": (
+    # Rofi Stuff
+    "M-S-<Slash>": (
         lazy.spawn("/home/khai/.config/qtile/rofi_keybinds.sh"),
         "Show keybindings",
+    ),
+    "A-<Space>": (
+        lazy.spawn("/home/khai/.config/qtile/rofi_app_launcher.sh"),
+        "App launcher",
     ),
 }
 
 keys = [*[EzKey(k, v[0], desc=v[1]) for k, v in keymap.items()]]
 
-keys.extend(
-    [
-        Key(
-            [],
-            "XF86MonBrightnessDown",
-            change_brightness("-"),
-            desc="Lower Brightness by 5%",
-        ),
-        Key(
-            [],
-            "XF86MonBrightnessUp",
-            change_brightness("+"),
-            desc="Raise Brightness by 5%",
-        ),
-        Key(
-            [],
-            "XF86AudioRaiseVolume",
-            lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%"),
-            desc="Raise volume by 5%",
-        ),
-        Key(
-            [],
-            "XF86AudioLowerVolume",
-            lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%"),
-            desc="Lower volume by 5%",
-        ),
-        Key(
-            [],
-            "XF86AudioMute",
-            lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle"),
-            desc="Toggle audio mute",
-        ),
-        Key(
-            [],
-            "Print",
-            lazy.spawn("/home/khai/.config/qtile/screenshot.sh"),
-            desc="Take screenshot",
-        ),
-    ]
-)
+# Media keys using EzKey format
+media_keys = {
+    "<XF86MonBrightnessDown>": (change_brightness("-"), "Lower Brightness by 5%"),
+    "<XF86MonBrightnessUp>": (change_brightness("+"), "Raise Brightness by 5%"),
+    "<XF86AudioRaiseVolume>": (
+        lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%"),
+        "Raise volume by 5%",
+    ),
+    "<XF86AudioLowerVolume>": (
+        lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%"),
+        "Lower volume by 5%",
+    ),
+    "<XF86AudioMute>": (
+        lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle"),
+        "Toggle audio mute",
+    ),
+    "<Print>": (
+        lazy.spawn("/home/khai/.config/qtile/screenshot.sh"),
+        "Take screenshot",
+    ),
+}
+
+keys.extend([EzKey(k, v[0], desc=v[1]) for k, v in media_keys.items()])
 
 # Add key bindings to switch VTs in Wayland
 for vt in range(1, 8):
     keys.append(
-        Key(
-            ["control", "mod1"],
-            f"f{vt}",
+        EzKey(
+            f"C-A-<F{vt}>",
             lazy.core.change_vt(vt).when(func=lambda: qtile.core.name == "wayland"),
             desc=f"Switch to VT{vt}",
         )
@@ -402,6 +506,7 @@ groups.append(
     )
 )
 
+
 # ROFI MENUS - Simple, fast, purpose-built menu system
 # All menus (power, apps, keybindings) now use rofi with green borders (#72D5A3)
 
@@ -409,21 +514,20 @@ for i in groups:
     if isinstance(i, ScratchPad):
         continue
 
-    keys.extend(
-        [
-            Key(
-                [mod],
-                i.name,
-                lazy.group[i.name].toscreen(),
-                desc="Switch to group {}".format(i.name),
-            ),
-            Key(
-                [mod, "shift"],
-                i.name,
-                lazy.window.togroup(i.name, switch_group=True),
-                desc="Switch to & move focused window to group {}".format(i.name),
-            ),
-        ]
+    # Group switching keys using EzKey format
+    keys.append(
+        EzKey(
+            f"M-{i.name}",
+            switch_to_group_on_screen(i.name),
+            desc=f"Switch to group {i.name} on current screen",
+        )
+    )
+    keys.append(
+        EzKey(
+            f"M-S-{i.name}",
+            lazy.window.togroup(i.name, switch_group=True),
+            desc=f"Switch to & move focused window to group {i.name}",
+        )
     )
 
 ############################################################################
@@ -432,13 +536,16 @@ for i in groups:
 
 layouts = [
     layout.MonadTall(
-        border_focus=colors[5],
-        border_normal="#000000",
+        border_focus=colors[3],
+        border_normal=colors[0],
         border_width=1,
+        single_margin=0,
+        single_border_width=0,
         margin=12,
     ),
-    layout.Max()
+    layout.Max(),
 ]
+
 
 ############################################################################
 # WIDGETS AND BAR
@@ -447,7 +554,8 @@ layouts = [
 widget_defaults = dict(
     font="Hack Nerd Font",
     fontsize=12,
-    padding=6,
+    padding=4,
+    type="line",
     foreground=colors[1],
 )
 extension_defaults = widget_defaults.copy()
@@ -460,18 +568,17 @@ screens = [
                     highlight_method="text",
                     highlight_color=colors[5],
                     padding=3,
-                    borderwidth=1,
                     active=colors[1],
                     inactive=colors[3],
                     this_current_screen_border=colors[5],
                     this_screen_border=colors[5],
                     other_screen_border=colors[5],
-                    # Make the line appear as dots by reducing visibility
                     line_width=2,
-                    border_width=0,
                     highlight_margin=2,
                     disable_drag=True,
+                    length_type=bar.STRETCH,
                 ),
+                widget.WindowCount(),
                 widget.Spacer(),
                 widget.Prompt(),
                 widget.Spacer(),
@@ -483,7 +590,6 @@ screens = [
                         "Button3": lambda: open_google_calendar(),
                     },
                 ),
-                widget.WindowCount(show_zero=True,),
             ],
             20,
             border_width=[0, 0, 0, 0],
@@ -520,7 +626,7 @@ dgroups_app_rules = []
 follow_mouse_focus = True
 bring_front_click = True
 floats_kept_above = True
-cursor_warp = False
+cursor_warp = True
 floating_layout = layout.Floating(
     float_rules=[
         *layout.Floating.default_float_rules,
@@ -540,7 +646,7 @@ floating_layout = layout.Floating(
 )
 auto_fullscreen = True
 focus_on_window_activation = "focus"
-reconfigure_screens = False
+reconfigure_screens = True
 auto_minimize = True
 
 wl_input_rules = None

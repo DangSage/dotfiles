@@ -1,0 +1,1 @@
+# Minimal profile - revert to system pacman

@@ -1,0 +1,10 @@
+[Unit]
+Description=Solaar Service
+After=graphical.target
+
+[Service]
+ExecStart=/usr/bin/solaar --window=hide
+Restart=always
+
+[Install]
+WantedBy=default.target

@@ -18,6 +18,12 @@ This is my own Arch Linux rice based on [kj_sh604's awesomeWM rice](https://gith
 
 and some basic daemons and services.
 
+## Desktop App Separation
+
+Desktop applications have been separated from system packages to reduce root partition usage. Desktop apps are installed to `~/.local/apps/` while system libraries and dev tools remain in pacman/pikaur on root.
+
+See [DESKTOP_APPS_SEPARATION.md](./.config/DESKTOP_APPS_SEPARATION.md) for the full plan and documentation.
+
 ## Installation
 
 ### Additional Packages

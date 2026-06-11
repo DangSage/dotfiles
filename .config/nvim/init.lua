@@ -6,6 +6,7 @@ require('opts')
 require('plug')
 require('tele')
 require('tree')
+require('git')
 --require('zen')
 
 -- enable spellcheck
